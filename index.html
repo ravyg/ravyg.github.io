@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ravish Gupta — AI Lead | IEEE Senior Member</title>
+  <meta name="description" content="Ravish Gupta — AI Lead at BigCommerce, IEEE Senior Member, published AI researcher specializing in agentic AI systems, enterprise architecture, and agent communication protocols." />
+  <meta property="og:title" content="Ravish Gupta — AI Lead | IEEE Senior Member" />
+  <meta property="og:description" content="AI architecture for enterprise agentic systems. Published researcher. IEEE Senior Member." />
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --accent: #2563eb;
+      --accent-light: #dbeafe;
+      --dark: #0f172a;
+      --mid: #334155;
+      --light: #f8fafc;
+      --border: #e2e8f0;
+    }
+    body { font-family: 'Segoe UI', system-ui, sans-serif; color: var(--dark); background: var(--light); line-height: 1.6; }
+
+    /* NAV */
+    nav { position: sticky; top: 0; background: white; border-bottom: 1px solid var(--border); padding: 0 2rem; z-index: 100; display: flex; justify-content: space-between; align-items: center; height: 56px; }
+    nav .logo { font-weight: 700; font-size: 1rem; color: var(--dark); }
+    nav .links a { margin-left: 1.5rem; text-decoration: none; color: var(--mid); font-size: 0.9rem; }
+    nav .links a:hover { color: var(--accent); }
+
+    /* HERO */
+    .hero { max-width: 860px; margin: 0 auto; padding: 5rem 2rem 4rem; }
+    .hero-tag { display: inline-block; background: var(--accent-light); color: var(--accent); font-size: 0.78rem; font-weight: 600; padding: 4px 12px; border-radius: 20px; margin-bottom: 1.2rem; letter-spacing: 0.04em; text-transform: uppercase; }
+    .hero h1 { font-size: clamp(2rem, 5vw, 3rem); font-weight: 800; line-height: 1.15; margin-bottom: 1rem; }
+    .hero p { font-size: 1.1rem; color: var(--mid); max-width: 600px; margin-bottom: 2rem; }
+    .badges { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 2rem; }
+    .badge { background: white; border: 1px solid var(--border); border-radius: 6px; padding: 5px 12px; font-size: 0.82rem; color: var(--mid); display: flex; align-items: center; gap: 6px; }
+    .badge strong { color: var(--dark); }
+    .cta-row { display: flex; flex-wrap: wrap; gap: 0.75rem; }
+    .btn { padding: 0.6rem 1.4rem; border-radius: 8px; font-size: 0.9rem; font-weight: 600; text-decoration: none; transition: opacity 0.15s; }
+    .btn-primary { background: var(--accent); color: white; }
+    .btn-secondary { background: white; border: 1px solid var(--border); color: var(--mid); }
+    .btn:hover { opacity: 0.85; }
+
+    /* SECTIONS */
+    section { max-width: 860px; margin: 0 auto; padding: 3.5rem 2rem; border-top: 1px solid var(--border); }
+    h2 { font-size: 1.4rem; font-weight: 700; margin-bottom: 1.5rem; }
+    h3 { font-size: 1rem; font-weight: 600; margin-bottom: 0.4rem; }
+
+    /* CURRENT ROLE */
+    .role-card { background: white; border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem; }
+    .role-title { font-size: 1.05rem; font-weight: 700; color: var(--accent); }
+    .role-sub { font-size: 0.9rem; color: var(--mid); margin-bottom: 0.8rem; }
+    .role-desc { font-size: 0.9rem; color: var(--mid); }
+    .company-pills { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 0.8rem; }
+    .pill { background: var(--accent-light); color: var(--accent); font-size: 0.78rem; font-weight: 600; padding: 3px 10px; border-radius: 20px; }
+
+    /* PUBLICATIONS */
+    .pub-table { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
+    .pub-table th { text-align: left; padding: 0.5rem 0.75rem; background: var(--light); border-bottom: 2px solid var(--border); color: var(--mid); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; }
+    .pub-table td { padding: 0.75rem 0.75rem; border-bottom: 1px solid var(--border); vertical-align: top; }
+    .pub-table tr:last-child td { border-bottom: none; }
+    .pub-table td a { color: var(--accent); text-decoration: none; }
+    .pub-table td a:hover { text-decoration: underline; }
+    .pub-status { font-size: 0.75rem; font-weight: 600; padding: 2px 8px; border-radius: 4px; display: inline-block; }
+    .pub-status.published { background: #dcfce7; color: #15803d; }
+    .pub-status.accepted { background: #fef9c3; color: #854d0e; }
+    .pub-status.oral { background: #dbeafe; color: #1d4ed8; }
+
+    /* RECOGNITION */
+    .awards-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1rem; }
+    .award-card { background: white; border: 1px solid var(--border); border-radius: 10px; padding: 1.2rem; }
+    .award-card .icon { font-size: 1.5rem; margin-bottom: 0.5rem; }
+    .award-card h3 { font-size: 0.92rem; }
+    .award-card p { font-size: 0.83rem; color: var(--mid); margin-top: 0.3rem; }
+
+    /* OPEN SOURCE */
+    .contrib-list { display: flex; flex-direction: column; gap: 0.75rem; }
+    .contrib-item { background: white; border: 1px solid var(--border); border-radius: 8px; padding: 1rem 1.2rem; display: flex; gap: 1rem; align-items: flex-start; }
+    .contrib-item .label { background: var(--dark); color: white; font-size: 0.72rem; font-weight: 700; padding: 2px 8px; border-radius: 4px; white-space: nowrap; margin-top: 2px; }
+    .contrib-item .text h3 { font-size: 0.9rem; }
+    .contrib-item .text p { font-size: 0.83rem; color: var(--mid); margin-top: 0.2rem; }
+
+    /* CONTACT */
+    .contact-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 0.75rem; }
+    .contact-item { background: white; border: 1px solid var(--border); border-radius: 8px; padding: 0.9rem 1rem; text-decoration: none; color: var(--dark); font-size: 0.88rem; display: flex; align-items: center; gap: 0.6rem; }
+    .contact-item:hover { border-color: var(--accent); color: var(--accent); }
+    .contact-item .ci-label { font-size: 0.72rem; color: var(--mid); display: block; }
+
+    footer { text-align: center; padding: 2rem; font-size: 0.8rem; color: var(--mid); border-top: 1px solid var(--border); }
+  </style>
+</head>
+<body>
+
+<nav>
+  <span class="logo">Ravish Gupta</span>
+  <div class="links">
+    <a href="#research">Research</a>
+    <a href="#recognition">Recognition</a>
+    <a href="#open-source">Open Source</a>
+    <a href="#contact">Contact</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <span class="hero-tag">AI Lead &nbsp;·&nbsp; IEEE Senior Member &nbsp;·&nbsp; Seattle, WA</span>
+  <h1>Building Enterprise<br/>Agentic AI at Scale</h1>
+  <p>AI architecture across BigCommerce, Feedonomics, and Makeswift.
+     Published researcher. 8+ years at Amazon Web Services.
+     Contributor to emerging agentic AI standards.</p>
+  <div class="badges">
+    <div class="badge"><strong>IEEE</strong> Senior Member #93067107</div>
+    <div class="badge"><strong>DBLP</strong> pid 208/3317</div>
+    <div class="badge"><strong>ORCID</strong> 0009-0008-9247-9579</div>
+    <div class="badge"><strong>M.S.</strong> Purdue University</div>
+    <div class="badge"><strong>Reviewer</strong> WCCI 2026 IJCNN</div>
+  </div>
+  <div class="cta-row">
+    <a class="btn btn-primary" href="https://linkedin.com/in/ravishgupta" target="_blank">LinkedIn</a>
+    <a class="btn btn-secondary" href="https://dblp.org/pid/208/3317.html" target="_blank">DBLP Publications</a>
+    <a class="btn btn-secondary" href="https://orcid.org/0009-0008-9247-9579" target="_blank">ORCID</a>
+    <a class="btn btn-secondary" href="https://github.com/ravyg" target="_blank">GitHub</a>
+  </div>
+</div>
+
+<!-- CURRENT ROLE -->
+<section>
+  <h2>Current Role</h2>
+  <div class="role-card">
+    <div class="role-title">AI Pillar Lead</div>
+    <div class="role-sub">BigCommerce · Feedonomics · Makeswift &nbsp;|&nbsp; Seattle, WA &nbsp;|&nbsp; 2023 – Present</div>
+    <div class="role-desc">
+      Leading unified AI strategy and architecture across three companies — designing multi-agent orchestration systems,
+      implementing Model Context Protocol (MCP) as the foundational communication layer for enterprise AI agents,
+      and building AI governance frameworks for commerce applications.
+      Previously 8+ years at <strong>Amazon Web Services</strong> on Amazon Q, Amazon Transform, and developer AI tooling.
+    </div>
+    <div class="company-pills">
+      <span class="pill">Agentic AI Architecture</span>
+      <span class="pill">Model Context Protocol (MCP)</span>
+      <span class="pill">Multi-Agent Orchestration</span>
+      <span class="pill">AI Governance</span>
+      <span class="pill">Enterprise LLM Deployment</span>
+    </div>
+  </div>
+</section>
+
+<!-- RESEARCH -->
+<section id="research">
+  <h2>Research &amp; Publications</h2>
+  <table class="pub-table">
+    <thead>
+      <tr>
+        <th>Year</th>
+        <th>Title</th>
+        <th>Venue</th>
+        <th>Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>2026</td>
+        <td>Agentic AI for Clinical Urgency Mapping and Queue Optimization in High-Volume Outpatient Departments: A Simulation-Based Evaluation</td>
+        <td>AICTC 2026 · Springer LNNS</td>
+        <td><span class="pub-status oral">Oral Presentation</span></td>
+      </tr>
+      <tr>
+        <td>2026</td>
+        <td>An Agentic Multi-Model Architecture for Cybersecurity Risk Management</td>
+        <td>AICTC 2026 · Springer LNNS</td>
+        <td><span class="pub-status accepted">Accepted</span></td>
+      </tr>
+      <tr>
+        <td>2026</td>
+        <td>Pedagogical AI in Mental Health: A Tri-Stream Fine-Tuned LLM Framework for Automated Clinical Supervision and Risk Triage</td>
+        <td>AICTC 2026 · Springer LNNS</td>
+        <td><span class="pub-status accepted">Accepted</span></td>
+      </tr>
+      <tr>
+        <td>2019</td>
+        <td><a href="https://doi.org/10.1007/978-3-030-37446-4_7" target="_blank">An Explainable Approach of Inferring Potential Medication Effects from Social Media Data</a></td>
+        <td>AIME 2019 · Springer LNCS</td>
+        <td><span class="pub-status published">Published</span></td>
+      </tr>
+      <tr>
+        <td>2017</td>
+        <td><a href="https://doi.org/10.1109/BIBM.2017.8217820" target="_blank">Deep Gramulator: Improving Precision in the Classification of Personal Health-Experience Tweets with Deep Learning</a></td>
+        <td>IEEE BIBM 2017</td>
+        <td><span class="pub-status published">Published</span></td>
+      </tr>
+      <tr>
+        <td>2017</td>
+        <td><a href="https://doi.org/10.1109/EMBC.2017.8037039" target="_blank">Identifying Personal Health Experience Tweets with Deep Neural Networks</a></td>
+        <td>IEEE EMBC 2017</td>
+        <td><span class="pub-status published">Published</span></td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- RECOGNITION -->
+<section id="recognition">
+  <h2>Recognition &amp; Awards</h2>
+  <div class="awards-grid">
+    <div class="award-card">
+      <div class="icon">🏅</div>
+      <h3>IEEE Senior Member</h3>
+      <p>Top ~10% of IEEE's 400,000+ global membership. Requires demonstrated engineering excellence and community impact.</p>
+    </div>
+    <div class="award-card">
+      <div class="icon">⭐</div>
+      <h3>Amazon R&amp;D Blackbelt Award</h3>
+      <p>Awarded to ~3,000 Amazon employees in the company's entire history. Recognizes exceptional research and development contributions.</p>
+    </div>
+    <div class="award-card">
+      <div class="icon">🎤</div>
+      <h3>AWS Certified Associate Speaker</h3>
+      <p>Formal AWS speaker certification. Presented at Amazon's World Wide Test Unconference (WWTUC) 2021 to global audience.</p>
+    </div>
+    <div class="award-card">
+      <div class="icon">🔬</div>
+      <h3>WCCI 2026 IJCNN Reviewer</h3>
+      <p>Peer reviewer at the World Congress on Computational Intelligence — IEEE's flagship AI and neural networks conference.</p>
+    </div>
+    <div class="award-card">
+      <div class="icon">⚖️</div>
+      <h3>UW Foster MBA Judge</h3>
+      <p>Judge, University of Washington Foster School of Business MBA Case Competition, March 2026.</p>
+    </div>
+    <div class="award-card">
+      <div class="icon">🚀</div>
+      <h3>AWS Transform GA Launch Award</h3>
+      <p>Recognized for contributions to the general availability launch of Amazon Transform, a major AWS product.</p>
+    </div>
+  </div>
+</section>
+
+<!-- OPEN SOURCE -->
+<section id="open-source">
+  <h2>Open Standards &amp; Open Source</h2>
+  <div class="contrib-list">
+    <div class="contrib-item">
+      <span class="label">CONTRIBUTOR</span>
+      <div class="text">
+        <h3>AP2 — Agent Payment Protocol (Google / google-agentic-commerce)</h3>
+        <p>PR #165 — B2B agent governance framework for multi-round AI-mediated commerce negotiations.
+           Protocol adopted by 60+ Fortune 500 partners. Apache 2.0.</p>
+      </div>
+    </div>
+    <div class="contrib-item">
+      <span class="label">IMPLEMENTER</span>
+      <div class="text">
+        <h3>Model Context Protocol (MCP) — Anthropic</h3>
+        <p>First-mover enterprise MCP implementation across BigCommerce, Feedonomics, and Makeswift —
+           defining the foundational agent communication layer for production commerce AI.</p>
+      </div>
+    </div>
+    <div class="contrib-item">
+      <span class="label">IN PREPARATION</span>
+      <div class="text">
+        <h3>AG-UI Protocol — PII Governance Trust Layer</h3>
+        <p>Patentable architecture for embedding PII governance directly into the agent-user interface protocol.
+           Patent filing in progress.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <h2>Connect</h2>
+  <p style="color:var(--mid); margin-bottom:1.2rem; font-size:0.92rem;">
+    Available for research collaborations, conference speaking, advisory roles, and media inquiries on agentic AI and enterprise AI strategy.
+  </p>
+  <div class="contact-grid">
+    <a class="contact-item" href="https://linkedin.com/in/ravishgupta" target="_blank">
+      <span>🔗</span>
+      <div><strong>LinkedIn</strong><span class="ci-label">linkedin.com/in/ravishgupta</span></div>
+    </a>
+    <a class="contact-item" href="https://dblp.org/pid/208/3317.html" target="_blank">
+      <span>📄</span>
+      <div><strong>DBLP</strong><span class="ci-label">pid 208/3317</span></div>
+    </a>
+    <a class="contact-item" href="https://orcid.org/0009-0008-9247-9579" target="_blank">
+      <span>🔬</span>
+      <div><strong>ORCID</strong><span class="ci-label">0009-0008-9247-9579</span></div>
+    </a>
+    <a class="contact-item" href="mailto:rgupt3888@gmail.com">
+      <span>✉️</span>
+      <div><strong>Email</strong><span class="ci-label">rgupt3888@gmail.com</span></div>
+    </a>
+  </div>
+</section>
+
+<footer>
+  © 2026 Ravish Gupta &nbsp;·&nbsp; Seattle, WA &nbsp;·&nbsp; IEEE Senior Member #93067107
+</footer>
+
+</body>
+</html>
