@@ -197,100 +197,50 @@
 </div>
 
 <script>
-// ── Data ──────────────────────────────────────────────────────────────────
-const REGIONS = {
-  seattle: { label: "Seattle–Tacoma", k: 0.9, t0: 2026.5, L: 1.05 },
-  sf:      { label: "San Francisco Bay Area", k: 1.0, t0: 2026.0, L: 1.08 },
-  austin:  { label: "Austin–Round Rock", k: 0.75, t0: 2027.0, L: 1.0 },
-  nyc:     { label: "New York–Newark", k: 0.85, t0: 2026.8, L: 1.02 },
-  boston:  { label: "Boston–Cambridge", k: 0.8, t0: 2026.9, L: 1.03 },
-};
-
-const OCCUPATIONS = [
-  { soc: "13-2041", title: "Credit Analysts", group: "Financial", base: 0.44, cov: 0.88, cap: 0.82 },
-  { soc: "13-2051", title: "Financial Analysts", group: "Financial", base: 0.41, cov: 0.85, cap: 0.79 },
-  { soc: "13-2052", title: "Personal Financial Advisors", group: "Financial", base: 0.36, cov: 0.74, cap: 0.72 },
-  { soc: "13-2053", title: "Insurance Underwriters", group: "Financial", base: 0.43, cov: 0.87, cap: 0.81 },
-  { soc: "13-2061", title: "Financial Examiners", group: "Financial", base: 0.38, cov: 0.78, cap: 0.74 },
-  { soc: "13-2072", title: "Loan Officers", group: "Financial", base: 0.40, cov: 0.82, cap: 0.77 },
-  { soc: "13-1031", title: "Claims Adjusters", group: "Financial", base: 0.42, cov: 0.86, cap: 0.80 },
-  { soc: "13-2011", title: "Accountants and Auditors", group: "Financial", base: 0.39, cov: 0.80, cap: 0.76 },
-  { soc: "13-2031", title: "Budget Analysts", group: "Financial", base: 0.37, cov: 0.76, cap: 0.73 },
-  { soc: "43-3031", title: "Bookkeeping Clerks", group: "Financial", base: 0.46, cov: 0.91, cap: 0.85 },
-  { soc: "23-1011", title: "Lawyers", group: "Legal", base: 0.38, cov: 0.77, cap: 0.74 },
-  { soc: "23-2011", title: "Paralegals", group: "Legal", base: 0.44, cov: 0.88, cap: 0.82 },
-  { soc: "23-1021", title: "Administrative Law Judges", group: "Legal", base: 0.45, cov: 0.89, cap: 0.83 },
-  { soc: "23-1023", title: "Judges (General)", group: "Legal", base: 0.43, cov: 0.87, cap: 0.81 },
-  { soc: "23-2093", title: "Title Examiners", group: "Legal", base: 0.46, cov: 0.90, cap: 0.84 },
-  { soc: "23-2099", title: "Legal Support Workers", group: "Legal", base: 0.45, cov: 0.89, cap: 0.83 },
-  { soc: "13-1041", title: "Compliance Officers", group: "Legal", base: 0.41, cov: 0.83, cap: 0.78 },
-  { soc: "29-1071", title: "Physician Assistants", group: "Healthcare", base: 0.29, cov: 0.61, cap: 0.60 },
-  { soc: "29-1141", title: "Registered Nurses", group: "Healthcare", base: 0.27, cov: 0.57, cap: 0.57 },
-  { soc: "29-1051", title: "Pharmacists", group: "Healthcare", base: 0.35, cov: 0.72, cap: 0.70 },
-  { soc: "29-2010", title: "Clinical Lab Technicians", group: "Healthcare", base: 0.38, cov: 0.78, cap: 0.74 },
-  { soc: "29-1021", title: "Dentists", group: "Healthcare", base: 0.22, cov: 0.47, cap: 0.50 },
-  { soc: "29-1062", title: "Family Medicine Physicians", group: "Healthcare", base: 0.28, cov: 0.59, cap: 0.58 },
-  { soc: "29-1171", title: "Nurse Practitioners", group: "Healthcare", base: 0.30, cov: 0.63, cap: 0.61 },
-  { soc: "29-2041", title: "Emergency Medical Techs", group: "Healthcare", base: 0.18, cov: 0.40, cap: 0.44 },
-  { soc: "31-9092", title: "Medical Assistants", group: "Healthcare Support", base: 0.40, cov: 0.82, cap: 0.77 },
-  { soc: "31-9094", title: "Medical Transcriptionists", group: "Healthcare Support", base: 0.52, cov: 0.96, cap: 0.90 },
-  { soc: "43-6013", title: "Medical Secretaries", group: "Healthcare Support", base: 0.48, cov: 0.93, cap: 0.87 },
-  { soc: "31-9097", title: "Phlebotomists", group: "Healthcare Support", base: 0.22, cov: 0.47, cap: 0.50 },
-  { soc: "31-9011", title: "Massage Therapists", group: "Healthcare Support", base: 0.10, cov: 0.22, cap: 0.32 },
-  { soc: "41-3021", title: "Insurance Sales Agents", group: "Sales", base: 0.40, cov: 0.82, cap: 0.77 },
-  { soc: "41-3031", title: "Securities & Financial Sales", group: "Sales", base: 0.38, cov: 0.78, cap: 0.74 },
-  { soc: "41-4011", title: "Sales Reps (Wholesale)", group: "Sales", base: 0.35, cov: 0.72, cap: 0.70 },
-  { soc: "41-2031", title: "Retail Salespersons", group: "Sales", base: 0.33, cov: 0.69, cap: 0.67 },
-  { soc: "41-9041", title: "Telemarketers", group: "Sales", base: 0.55, cov: 0.98, cap: 0.93 },
-  { soc: "41-3099", title: "Sales Representatives (Other)", group: "Sales", base: 0.36, cov: 0.74, cap: 0.72 },
-  { soc: "43-9041", title: "Insurance Claims Clerks", group: "Administrative", base: 0.50, cov: 0.95, cap: 0.88 },
-  { soc: "43-4051", title: "Customer Service Reps", group: "Administrative", base: 0.46, cov: 0.91, cap: 0.85 },
-  { soc: "43-6011", title: "Executive Secretaries", group: "Administrative", base: 0.44, cov: 0.88, cap: 0.82 },
-  { soc: "43-9021", title: "Data Entry Keyers", group: "Administrative", base: 0.56, cov: 0.99, cap: 0.94 },
-  { soc: "43-3011", title: "Bill & Account Collectors", group: "Administrative", base: 0.50, cov: 0.94, cap: 0.88 },
-  { soc: "43-1011", title: "Supervisors (Office)", group: "Administrative", base: 0.38, cov: 0.78, cap: 0.74 },
-  { soc: "13-1161", title: "Market Research Analysts", group: "Administrative", base: 0.41, cov: 0.84, cap: 0.79 },
-  { soc: "11-3031", title: "Financial Managers", group: "Financial", base: 0.35, cov: 0.72, cap: 0.70 },
-  { soc: "13-1199", title: "Sustainability Specialists", group: "Administrative", base: 0.45, cov: 0.89, cap: 0.83 },
-];
-
-const REINSTATEMENT_ROLES = [
-  { title: "AI Workflow Orchestrator", description: "Design and manage multi-agent pipelines", ate: 0.08 },
-  { title: "Human-AI Collaboration Specialist", description: "Bridge AI outputs with human decision-making", ate: 0.10 },
-  { title: "AI Governance Analyst", description: "Policy, compliance, and ethics for AI systems", ate: 0.12 },
-  { title: "Prompt Engineer / LLM Ops", description: "Optimize AI model behavior for domain tasks", ate: 0.09 },
-  { title: "AI Auditor", description: "Verify and validate AI decision outputs", ate: 0.11 },
-  { title: "Domain-Specific AI Trainer", description: "Fine-tune and evaluate AI for specialized fields", ate: 0.13 },
-  { title: "Agentic Systems Designer", description: "Architect autonomous AI workflows", ate: 0.10 },
-  { title: "AI Change Manager", description: "Lead workforce transitions to AI-augmented roles", ate: 0.15 },
-];
+// ── Data loaded from paper's computed results ─────────────────────────────
+// Source: /experiments/results/us/ate_web_data.json (generated by export_ate_for_web.py)
+let REGIONS = {};
+let OCCUPATIONS = [];
+let REINSTATEMENT_ROLES = [];
+let RISK_LEVELS = [];
+let SOC_GROUPS = {};
 
 const GROUP_COLORS = {
-  Financial: "#e8a838",
-  Legal: "#7c6af7",
-  Healthcare: "#3ec9a7",
-  "Healthcare Support": "#e8709a",
-  Sales: "#5bc4f5",
-  Administrative: "#f07149",
+  "Management": "#e8a838",
+  "Business & Financial": "#e8a838",
+  "Computer & Mathematical": "#5bc4f5",
+  "Architecture & Engineering": "#5bc4f5",
+  "Life, Physical, & Social Science": "#3ec9a7",
+  "Community & Social Service": "#3ec9a7",
+  "Legal": "#7c6af7",
+  "Education": "#b8aaff",
+  "Arts, Design, Media": "#e8709a",
+  "Healthcare Practitioners": "#3ec9a7",
+  "Healthcare Support": "#3ec9a7",
+  "Protective Service": "#f07149",
+  "Food Preparation": "#e8a838",
+  "Building Maintenance": "#6a6050",
+  "Personal Care": "#e8709a",
+  "Sales": "#5bc4f5",
+  "Office & Administrative": "#f07149",
+  "Farming": "#3ec9a7",
+  "Construction": "#6a6050",
+  "Installation & Repair": "#6a6050",
+  "Production": "#f07149",
+  "Transportation": "#e8a838",
+  "Other": "#555",
 };
 
-const RISK_LEVELS = [
-  { max: 0.25, label: "Low Risk", color: "#3ec9a7", desc: "Agentic AI has limited workflow coverage in your role through 2030." },
-  { max: 0.35, label: "Moderate Risk", color: "#e8c138", desc: "Meaningful exposure developing. Upskilling now gives a strong buffer." },
-  { max: 0.45, label: "High Risk", color: "#f07149", desc: "Substantial agentic AI capability overlap. Strategic pivot recommended by 2027." },
-  { max: 1.0,  label: "Critical Risk", color: "#e8394a", desc: "End-to-end workflow coverage likely by 2028. Transition planning is urgent." },
-];
-
-// ── Math ──────────────────────────────────────────────────────────────────
-function sigmoid(year, k, t0, L) { return L / (1 + Math.exp(-k * (year - t0))); }
-function computeATE(baseScore, region, year) {
-  const r = REGIONS[region];
-  const s = sigmoid(year, r.k, r.t0, r.L);
-  return Math.min(0.99, baseScore * s);
+// ── Score lookup (uses precomputed paper data, not formula) ────────────────
+function getScore(occ, region, year) {
+  const yearData = occ.scores[region];
+  if (!yearData) return 0;
+  return yearData[year] || 0;
 }
 function getRiskLevel(score) {
   return RISK_LEVELS.find(r => score <= r.max) || RISK_LEVELS[RISK_LEVELS.length - 1];
 }
+function sigmoid(year, k, t0, L) { return L / (1 + Math.exp(-k * (year - t0))); }
 function esc(str) {
   const div = document.createElement('div');
   div.appendChild(document.createTextNode(str));
@@ -363,7 +313,7 @@ function renderDropdown() {
 
 function animateAndRender() {
   if (!state.selected) { renderResults(); return; }
-  const target = computeATE(state.selected.base, state.region, 2026);
+  const target = getScore(state.selected, state.region, 2026);
   state.animScore = 0;
   renderResults();
   const start = performance.now();
@@ -393,6 +343,7 @@ function renderResults() {
         <div class="ate-empty-sub">236 occupations &middot; 6 SOC groups &middot; 5 US regions</div>
         <div class="ate-quick">
           ${["Credit Analysts", "Paralegals", "Data Entry Keyers", "Registered Nurses", "Financial Analysts"]
+            .filter(t => OCCUPATIONS.find(o => o.title === t))
             .map(t => `<button class="ate-quick-btn" data-quick="${esc(t)}">${esc(t)}</button>`).join('')}
         </div>
       </div>
@@ -413,9 +364,11 @@ function renderResults() {
     return;
   }
 
-  const currentScore = computeATE(state.selected.base, state.region, 2026);
+  const currentScore = getScore(state.selected, state.region, 2026);
   const risk = getRiskLevel(currentScore);
   const sVal = sigmoid(2026, REGIONS[state.region].k, REGIONS[state.region].t0, REGIONS[state.region].L);
+  const score2025 = getScore(state.selected, state.region, 2025);
+  const score2030 = getScore(state.selected, state.region, 2030);
 
   let html = `
     <div class="ate-score-card" style="border:1px solid ${risk.color}30; box-shadow:0 0 40px ${risk.color}15;">
@@ -442,12 +395,12 @@ function renderResults() {
       </div>
       <div class="ate-factors">
         <div class="ate-factor">
-          <div class="ate-factor-val">${state.selected.cap.toFixed(2)}</div>
-          <div class="ate-factor-label">CAP (AI Capability)</div>
+          <div class="ate-factor-val">${(score2025 * 100).toFixed(1)}</div>
+          <div class="ate-factor-label">2025 Baseline</div>
         </div>
         <div class="ate-factor">
-          <div class="ate-factor-val">${state.selected.cov.toFixed(2)}</div>
-          <div class="ate-factor-label">COV (Workflow Coverage)</div>
+          <div class="ate-factor-val">${(score2030 * 100).toFixed(1)}</div>
+          <div class="ate-factor-label">2030 Projection</div>
         </div>
         <div class="ate-factor">
           <div class="ate-factor-val">${sVal.toFixed(3)}</div>
@@ -490,22 +443,25 @@ function renderPanel(currentScore, risk) {
   if (state.activeTab === 'score') {
     panel.innerHTML = `
       <div class="ate-panel">
-        <div class="ate-panel-title">ATE Formula Breakdown</div>
+        <div class="ate-panel-title">ATE Formula &amp; Methodology</div>
         <div class="ate-formula">
-          ATE = &Sigma; [ w(o,t) &times; CAP(t) &times; COV(t) ] &times; S(year, region)<br/>
-          <em>= ${state.selected.cap.toFixed(2)} &times; ${state.selected.cov.toFixed(2)} &times; ${sVal.toFixed(3)} = <strong>${currentScore.toFixed(3)}</strong></em>
+          ATE<sub>o,r,t</sub> = &Sigma;<sub>t</sub> [ w<sub>o,t</sub> &times; CAP<sub>t</sub> &times; COV<sub>t</sub> ] &times; S(t; k<sub>r</sub>, t<sub>0,r</sub>, L<sub>r</sub>)<br/>
+          <em>S(${2026}; k=${REGIONS[state.region].k}, t<sub>0</sub>=${REGIONS[state.region].t0}, L=${REGIONS[state.region].L}) = ${sVal.toFixed(3)}</em><br/>
+          <strong>ATE for ${esc(state.selected.title)} in ${esc(REGIONS[state.region].label)}, 2026 = ${currentScore.toFixed(4)}</strong>
         </div>
         <div class="ate-breakdown-desc">
-          <strong>CAP</strong> &mdash; AI capability score derived from benchmark literature and practitioner deployment reports for tasks in this occupation.<br/>
-          <strong>COV</strong> &mdash; Workflow coverage factor: fraction of this occupation's standard workflow executable end-to-end by current agentic AI without human handoff.<br/>
-          <strong>S(t)</strong> &mdash; Logistic S-curve adoption velocity calibrated to regional enterprise AI adoption rates.<br/><br/>
+          <strong>w<sub>o,t</sub></strong> &mdash; Task weight: importance of task <em>t</em> within occupation <em>o</em> (from O*NET task importance ratings).<br/>
+          <strong>CAP<sub>t</sub></strong> &mdash; AI capability score for task <em>t</em>, derived from benchmark literature and practitioner deployment reports.<br/>
+          <strong>COV<sub>t</sub></strong> &mdash; Workflow coverage: fraction of task executable end-to-end by current agentic AI without human handoff.<br/>
+          <strong>S(t; k, t<sub>0</sub>, L)</strong> &mdash; Regional logistic S-curve adoption velocity, calibrated per metro (Tier 1/2/3).<br/><br/>
+          The displayed score is computed from the paper's precomputed per-occupation task-weighted exposure combined with this region's S-curve.<br/><br/>
           <span class="ate-source">Source: Gupta &amp; Kumar (2026), "Agentic AI and Occupational Displacement," arxiv:2604.00186</span>
         </div>
       </div>
     `;
   } else if (state.activeTab === 'timeline') {
     const years = [2025, 2026, 2027, 2028, 2029, 2030];
-    const data = years.map(y => ({ year: y, score: computeATE(state.selected.base, state.region, y) }));
+    const data = years.map(y => ({ year: y, score: getScore(state.selected, state.region, y) }));
     panel.innerHTML = `
       <div class="ate-panel">
         <div class="ate-panel-title">ATE Score Trajectory &middot; ${esc(REGIONS[state.region].label)}</div>
@@ -532,7 +488,7 @@ function renderPanel(currentScore, risk) {
   } else if (state.activeTab === 'regions') {
     const data = Object.entries(REGIONS).map(([key, val]) => ({
       key, label: val.label,
-      score: computeATE(state.selected.base, key, 2026)
+      score: getScore(state.selected, key, 2026)
     })).sort((a, b) => b.score - a.score);
     const maxVal = Math.max(...data.map(r => r.score));
     panel.innerHTML = `
@@ -555,27 +511,34 @@ function renderPanel(currentScore, risk) {
       </div>
     `;
   } else if (state.activeTab === 'pivot') {
+    // Group by category
+    const byCategory = {};
+    REINSTATEMENT_ROLES.forEach(r => {
+      if (!byCategory[r.category]) byCategory[r.category] = [];
+      byCategory[r.category].push(r);
+    });
     panel.innerHTML = `
       <div class="ate-panel">
-        <div class="ate-panel-title">Reinstatement Roles</div>
+        <div class="ate-panel-title">17 Reinstatement Roles (Paper Table 4)</div>
         <div class="ate-pivot-intro">
           Emerging occupational categories identified in the paper where agentic AI deployment creates new demand for human roles.
           Your current ATE: <span style="color:${risk.color};">${(currentScore * 100).toFixed(1)}</span>
         </div>
-        ${REINSTATEMENT_ROLES.map(role => `
-          <div class="ate-pivot-row">
-            <div>
-              <div class="ate-pivot-title">${esc(role.title)}</div>
-              <div class="ate-pivot-desc">${esc(role.description)}</div>
-            </div>
-            <div>
-              <div class="ate-pivot-score">${(role.ate * 100).toFixed(0)}</div>
-              <div class="ate-pivot-score-label">ATE score</div>
-            </div>
+        ${Object.entries(byCategory).map(([cat, roles]) => `
+          <div style="margin-bottom:16px;">
+            <div style="font-size:11px; color:#7c6af7; font-family:monospace; letter-spacing:0.12em; text-transform:uppercase; margin-bottom:8px;">${esc(cat)}</div>
+            ${roles.map(role => `
+              <div class="ate-pivot-row">
+                <div>
+                  <div class="ate-pivot-title">${esc(role.title)}</div>
+                  <div class="ate-pivot-desc">${esc(role.description)}</div>
+                </div>
+              </div>
+            `).join('')}
           </div>
         `).join('')}
         <div class="ate-pivot-footer">
-          &uarr; These roles have low ATE scores because agentic AI deployment creates, rather than eliminates, demand for human oversight, governance, and collaboration at scale.
+          &uarr; These roles emerge from agentic AI deployment creating new demand for human oversight, governance, and collaboration at scale.
         </div>
       </div>
     `;
@@ -601,9 +564,26 @@ document.addEventListener('mousedown', e => {
   if (!searchWrap.contains(e.target)) dropdown.classList.remove('open');
 });
 
-// Initial render
-renderRegions();
-renderResults();
+// Initial load
+resultsEl.innerHTML = '<div class="ate-empty"><div class="ate-empty-title">Loading ATE data...</div></div>';
+
+fetch('data/ate-data.json')
+  .then(r => {
+    if (!r.ok) throw new Error(r.status);
+    return r.json();
+  })
+  .then(data => {
+    REGIONS = data.regions;
+    OCCUPATIONS = data.occupations;
+    REINSTATEMENT_ROLES = data.reinstatement_roles;
+    RISK_LEVELS = data.risk_levels;
+    SOC_GROUPS = data.soc_groups;
+    renderRegions();
+    renderResults();
+  })
+  .catch(err => {
+    resultsEl.innerHTML = '<div class="ate-empty"><div class="ate-empty-title" style="color:#e8394a;">Failed to load ATE data</div><div class="ate-empty-sub">' + err + '</div></div>';
+  });
 </script>
 </body>
 </html>
