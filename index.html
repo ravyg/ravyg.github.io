@@ -88,10 +88,11 @@
     }
 
     /* HERO */
-    .hero { max-width: 860px; margin: 0 auto; padding: 5rem 2rem 4rem; }
-    .hero-tag { display: inline-block; background: var(--accent-light); color: var(--accent); font-size: 0.78rem; font-weight: 600; padding: 4px 12px; border-radius: 20px; margin-bottom: 1.2rem; letter-spacing: 0.04em; text-transform: uppercase; }
-    .hero h1 { font-size: clamp(2rem, 5vw, 3rem); font-weight: 800; line-height: 1.15; margin-bottom: 1rem; }
-    .hero p { font-size: 1.1rem; color: var(--mid); max-width: 600px; margin-bottom: 2rem; }
+    .hero { max-width: 860px; margin: 0 auto; padding: 5rem 2rem 4rem; text-align: center; }
+    .hero-tag { display: inline-block; background: var(--accent-light); color: var(--accent); font-size: 0.78rem; font-weight: 600; padding: 4px 12px; border-radius: 20px; margin-bottom: 1.6rem; letter-spacing: 0.04em; text-transform: uppercase; }
+    .hero h1 { font-family: 'Inter', 'Helvetica Neue', system-ui, sans-serif; font-size: clamp(3rem, 8vw, 5rem); font-weight: 200; line-height: 1.05; margin-bottom: 1rem; letter-spacing: -0.03em; }
+    .hero p { font-size: 1.1rem; color: var(--mid); max-width: 600px; margin: 0 auto 2rem; }
+    .hero .badges, .hero .cta-row { justify-content: center; }
     .badges { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 2rem; }
     .badge { background: white; border: 1px solid var(--border); border-radius: 6px; padding: 5px 12px; font-size: 0.82rem; color: var(--mid); display: flex; align-items: center; gap: 6px; text-decoration: none; transition: border-color 0.15s; }
     .badge:hover { border-color: var(--accent); }
@@ -238,8 +239,8 @@
 
 <!-- HERO -->
 <div class="hero">
+  <h1>Ravish Gupta</h1>
   <span class="hero-tag">AI/ML Researcher &nbsp;·&nbsp; AI Lead &nbsp;·&nbsp; IEEE Senior Member &nbsp;·&nbsp; Seattle, WA</span>
-  <h1>Architecting the<br/>Agentic Enterprise</h1>
   <p>AI/ML researcher with 15+ years in software engineering, working on agentic systems and their labor-market impact.
      AI architecture across Commerce (BigCommerce, Feedonomics, and Makeswift).
      Previously 8+ years at Amazon Web Services. Contributor to emerging agentic AI standards.</p>
