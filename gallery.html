@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Creative Portal — Ravish Gupta</title>
+  <meta name="description" content="Paintings, art, and creative works by Ravish Gupta." />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&family=Inter:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --bg: #0c0c0c;
+      --surface: #141414;
+      --border: #222;
+      --text: #e0e0e0;
+      --text-dim: #6a6a6a;
+      --accent: #c9a461;
+      --accent-light: rgba(201,164,97,0.12);
+      --serif: 'Cormorant Garamond', Georgia, serif;
+      --sans: 'Inter', system-ui, sans-serif;
+    }
+    body { font-family: var(--sans); background: var(--bg); color: var(--text); line-height: 1.6; -webkit-font-smoothing: antialiased; }
+
+    /* NAV — minimal, fades on scroll */
+    nav { position: fixed; top: 0; left: 0; right: 0; background: rgba(12,12,12,0.92); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); padding: 0 3rem; z-index: 100; display: flex; justify-content: space-between; align-items: center; height: 52px; transition: transform 0.3s; }
+    nav.hidden { transform: translateY(-100%); }
+    nav .logo { font-family: var(--serif); font-weight: 400; font-size: 1.1rem; color: var(--text); text-decoration: none; letter-spacing: 0.04em; }
+    nav .links { display: flex; gap: 2rem; }
+    nav .links a { text-decoration: none; color: var(--text-dim); font-size: 0.8rem; font-weight: 400; letter-spacing: 0.06em; text-transform: uppercase; transition: color 0.2s; }
+    nav .links a:hover, nav .links a.active { color: var(--accent); }
+    @media (max-width: 600px) {
+      nav { padding: 0 1.5rem; }
+      nav .links { gap: 1.2rem; }
+      nav .links a { font-size: 0.72rem; }
+    }
+
+    /* HERO — cinematic, spacious */
+    .gallery-hero { max-width: 700px; margin: 0 auto; padding: 10rem 2rem 4rem; text-align: center; }
+    .gallery-hero .eyebrow { font-family: var(--sans); font-size: 0.7rem; font-weight: 400; letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent); margin-bottom: 1.5rem; }
+    .gallery-hero h1 { font-family: var(--serif); font-size: clamp(2.4rem, 6vw, 4rem); font-weight: 300; letter-spacing: 0.02em; line-height: 1.15; margin-bottom: 1.2rem; color: var(--text); }
+    .gallery-hero h1 em { font-style: italic; color: var(--accent); font-weight: 400; }
+    .gallery-hero p { color: var(--text-dim); font-size: 0.95rem; font-weight: 300; line-height: 1.7; max-width: 440px; margin: 0 auto; }
+    .hero-line { width: 40px; height: 1px; background: var(--accent); margin: 2.5rem auto 0; }
+
+    /* FILTER TABS */
+    .filters { display: flex; justify-content: center; gap: 0.4rem; padding: 0 2rem 3.5rem; flex-wrap: wrap; }
+    .filter-btn { background: transparent; border: none; color: var(--text-dim); padding: 0.5rem 1.2rem; font-size: 0.75rem; font-weight: 400; letter-spacing: 0.08em; text-transform: uppercase; cursor: pointer; transition: color 0.2s; font-family: var(--sans); position: relative; }
+    .filter-btn::after { content: ''; position: absolute; bottom: 0; left: 50%; width: 0; height: 1px; background: var(--accent); transition: all 0.25s; transform: translateX(-50%); }
+    .filter-btn:hover { color: var(--text); }
+    .filter-btn.active { color: var(--accent); }
+    .filter-btn.active::after { width: 100%; }
+
+    /* GALLERY GRID — masonry */
+    .gallery-grid { max-width: 1200px; margin: 0 auto; padding: 0 2.5rem 5rem; columns: 3; column-gap: 1.2rem; }
+    @media (max-width: 900px) { .gallery-grid { columns: 2; padding: 0 1.5rem 4rem; } }
+    @media (max-width: 520px) { .gallery-grid { columns: 1; max-width: 440px; } }
+
+    /* ART CARD — clean, minimal chrome */
+    .art-card { break-inside: avoid; margin-bottom: 1.2rem; position: relative; cursor: pointer; opacity: 0; transform: translateY(30px); transition: opacity 0.6s ease, transform 0.6s ease; }
+    .art-card.visible { opacity: 1; transform: translateY(0); }
+    .art-thumb { width: 100%; display: block; background-size: cover; background-position: center; background-repeat: no-repeat; border-radius: 3px; -webkit-user-select: none; user-select: none; -webkit-user-drag: none; transition: transform 0.4s ease, filter 0.4s ease; min-height: 200px; }
+    .art-card:hover .art-thumb { transform: scale(1.02); filter: brightness(1.08); }
+    /* Transparent overlay to block right-click save */
+    .art-overlay { position: absolute; top: 0; left: 0; right: 0; bottom: 0; z-index: 1; border-radius: 3px; }
+    .art-info { padding: 0.9rem 0.2rem 1.5rem; position: relative; z-index: 2; }
+    .art-info h3 { font-family: var(--serif); font-size: 1.05rem; font-weight: 400; color: var(--text); letter-spacing: 0.01em; }
+    .art-info p { font-size: 0.72rem; color: var(--text-dim); font-weight: 300; letter-spacing: 0.04em; margin-top: 0.15rem; }
+
+    /* LIGHTBOX — immersive */
+    .lightbox { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.97); z-index: 200; align-items: center; justify-content: center; flex-direction: column; opacity: 0; transition: opacity 0.3s; }
+    .lightbox.open { display: flex; opacity: 1; }
+    .lightbox-img { max-width: 88vw; max-height: 78vh; background-size: contain; background-repeat: no-repeat; background-position: center; -webkit-user-select: none; user-select: none; border-radius: 2px; }
+    .lightbox-close { position: absolute; top: 1.8rem; right: 2.5rem; color: var(--text-dim); font-size: 1.4rem; cursor: pointer; background: none; border: none; font-family: var(--sans); font-weight: 300; transition: color 0.2s; z-index: 201; letter-spacing: 0.05em; }
+    .lightbox-close:hover { color: var(--text); }
+    .lightbox-caption { margin-top: 2rem; text-align: center; }
+    .lightbox-caption strong { font-family: var(--serif); font-size: 1.15rem; font-weight: 400; color: var(--text); display: block; margin-bottom: 0.3rem; }
+    .lightbox-caption span { font-size: 0.75rem; color: var(--text-dim); font-weight: 300; letter-spacing: 0.04em; }
+    .lightbox-nav { position: absolute; top: 50%; transform: translateY(-50%); background: none; border: none; color: var(--text-dim); font-size: 1.8rem; cursor: pointer; padding: 1rem; transition: color 0.2s; z-index: 201; }
+    .lightbox-nav:hover { color: var(--text); }
+    .lightbox-nav.prev { left: 1.5rem; }
+    .lightbox-nav.next { right: 1.5rem; }
+    /* Overlay on lightbox image */
+    .lightbox-wrap { position: relative; }
+    .lightbox-wrap::after { content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; }
+
+    /* COMING SOON */
+    .coming-soon { max-width: 500px; margin: 4rem auto 6rem; text-align: center; padding: 0 2rem; }
+    .cs-line { width: 40px; height: 1px; background: var(--border); margin: 0 auto; }
+    .cs-label { font-family: var(--serif); font-size: 1.6rem; font-weight: 300; font-style: italic; color: var(--accent); margin: 2rem 0 1rem; letter-spacing: 0.03em; }
+    .cs-desc { font-size: 0.88rem; color: var(--text-dim); font-weight: 300; line-height: 1.8; margin-bottom: 2rem; }
+
+    /* FOOTER */
+    footer { text-align: center; padding: 3rem 2rem; font-size: 0.72rem; color: var(--text-dim); letter-spacing: 0.06em; border-top: 1px solid var(--border); font-weight: 300; }
+  </style>
+</head>
+<body>
+
+<nav id="navbar">
+  <a class="logo" href="index.html">Ravish Gupta</a>
+  <div class="links">
+    <a href="index.html">Profile</a>
+    <a href="gallery.html" class="active">Creative Portal</a>
+  </div>
+</nav>
+
+<div class="gallery-hero">
+  <div class="eyebrow">A Personal Collection</div>
+  <h1>The <em>Krita</em> Collection</h1>
+  <p>Where thought dissolves into doing. Where the painter, the athlete, the scientist, and the soul are the same person.</p>
+  <div class="hero-line"></div>
+</div>
+
+<!-- Filters hidden until launch
+<div class="filters">
+  <button class="filter-btn active" data-filter="all">All Works</button>
+  <button class="filter-btn" data-filter="painting">Paintings</button>
+  <button class="filter-btn" data-filter="sketch">Sketches</button>
+  <button class="filter-btn" data-filter="digital">Digital</button>
+  <button class="filter-btn" data-filter="other">Mixed Media</button>
+</div>
+-->
+
+<div class="coming-soon">
+  <div class="cs-line"></div>
+  <p class="cs-label">Arriving Soon</p>
+  <p class="cs-desc">The canvas is being prepared. Original paintings, sketches, and creative works will be unveiled here.</p>
+  <div class="cs-line"></div>
+</div>
+
+<div class="gallery-grid" id="gallery" style="display:none;">
+</div>
+
+<!-- LIGHTBOX -->
+<div class="lightbox" id="lightbox">
+  <button class="lightbox-close" id="lb-close">Close</button>
+  <button class="lightbox-nav prev" id="lb-prev">&#8592;</button>
+  <button class="lightbox-nav next" id="lb-next">&#8594;</button>
+  <div class="lightbox-wrap">
+    <div class="lightbox-img" id="lb-img"></div>
+  </div>
+  <div class="lightbox-caption" id="lb-caption"></div>
+</div>
+
+<footer>
+  &copy; 2026 Ravish Gupta &nbsp;&middot;&nbsp; All artwork is original. For display only &mdash; not for sale or reproduction.
+</footer>
+
+<script>
+(function() {
+  // Disable right-click
+  document.addEventListener('contextmenu', function(e) { e.preventDefault(); });
+
+  // Hide nav on scroll down, show on scroll up
+  var nav = document.getElementById('navbar');
+  var lastScroll = 0;
+  window.addEventListener('scroll', function() {
+    var st = window.pageYOffset;
+    if (st > lastScroll && st > 80) {
+      nav.classList.add('hidden');
+    } else {
+      nav.classList.remove('hidden');
+    }
+    lastScroll = st;
+  });
+
+  // Fade-in on scroll (Intersection Observer)
+  var observer = new IntersectionObserver(function(entries) {
+    entries.forEach(function(entry) {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.1 });
+
+  // Google Drive thumbnail URL (low-res, watermarked by you)
+  var THUMB_SIZE = 'w800';
+  function driveThumbUrl(fileId) {
+    return 'https://drive.google.com/thumbnail?id=' + fileId + '&sz=' + THUMB_SIZE;
+  }
+
+  function esc(str) {
+    var div = document.createElement('div');
+    div.appendChild(document.createTextNode(str));
+    return div.innerHTML;
+  }
+
+  var gallery = document.getElementById('gallery');
+  var cards = [];
+
+  // Load works from JSON
+  fetch('gallery/works.json')
+    .then(function(r) { return r.json(); })
+    .then(function(works) {
+      if (!works.length) {
+        gallery.innerHTML = '<p style="text-align:center;color:var(--text-dim);padding:3rem;">No artwork yet. Check back soon.</p>';
+        return;
+      }
+
+      gallery.innerHTML = works.map(function(w) {
+        var thumbUrl = driveThumbUrl(w.id);
+        var detail = esc(w.medium || '');
+        if (w.size) detail += ', ' + esc(w.size);
+        if (w.year) detail += ' \u00B7 ' + w.year;
+        return '<div class="art-card" data-category="' + esc(w.category || 'other') + '">' +
+          '<div class="art-thumb" style="background-image:url(\'' + thumbUrl + '\');"></div>' +
+          '<div class="art-overlay"></div>' +
+          '<div class="art-info"><h3>' + esc(w.title) + '</h3><p>' + detail + '</p></div>' +
+        '</div>';
+      }).join('');
+
+      // After rendering, set up cards
+      cards = document.querySelectorAll('.art-card');
+
+      // Auto-size thumbnails once images load
+      cards.forEach(function(card) {
+        var thumb = card.querySelector('.art-thumb');
+        var img = new Image();
+        img.onload = function() {
+          var ratio = img.height / img.width;
+          thumb.style.height = Math.round(thumb.offsetWidth * ratio) + 'px';
+          observer.observe(card);
+        };
+        img.onerror = function() {
+          // Fallback height if image fails to load
+          thumb.style.height = '300px';
+          thumb.style.background = 'linear-gradient(135deg, #1a1a2e, #0f3460)';
+          observer.observe(card);
+        };
+        img.src = driveThumbUrl(works[Array.from(cards).indexOf(card)].id);
+      });
+
+      initFilters();
+      initLightbox();
+    })
+    .catch(function() {
+      gallery.innerHTML = '<p style="text-align:center;color:var(--text-dim);padding:3rem;">Could not load artwork.</p>';
+    });
+
+  // Filter tabs
+  function initFilters() {
+    var filterBtns = document.querySelectorAll('.filter-btn');
+    filterBtns.forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        filterBtns.forEach(function(b) { b.classList.remove('active'); });
+        btn.classList.add('active');
+        var filter = btn.getAttribute('data-filter');
+        cards.forEach(function(card) {
+          var show = filter === 'all' || card.getAttribute('data-category') === filter;
+          card.style.display = show ? '' : 'none';
+          if (show && !card.classList.contains('visible')) {
+            card.classList.add('visible');
+          }
+        });
+      });
+    });
+  }
+
+  // Lightbox with prev/next
+  var lightbox = document.getElementById('lightbox');
+  var lbImg = document.getElementById('lb-img');
+  var lbCaption = document.getElementById('lb-caption');
+  var currentIndex = -1;
+
+  function getVisibleCards() {
+    return Array.from(cards).filter(function(c) { return c.style.display !== 'none'; });
+  }
+
+  function initLightbox() {
+    cards.forEach(function(card) {
+      card.addEventListener('click', function() {
+        var visible = getVisibleCards();
+        var idx = visible.indexOf(card);
+        if (idx !== -1) openLightbox(idx);
+      });
+    });
+  }
+
+  function openLightbox(index) {
+    var visible = getVisibleCards();
+    if (index < 0 || index >= visible.length) return;
+    currentIndex = index;
+    var card = visible[index];
+    var thumb = card.querySelector('.art-thumb');
+    var bg = thumb.style.backgroundImage;
+    var h = thumb.offsetHeight;
+    var w = thumb.offsetWidth;
+    var ratio = h / w;
+    var imgW = Math.min(window.innerWidth * 0.88, 960);
+    var imgH = imgW * ratio;
+    if (imgH > window.innerHeight * 0.78) {
+      imgH = window.innerHeight * 0.78;
+      imgW = imgH / ratio;
+    }
+    lbImg.style.width = imgW + 'px';
+    lbImg.style.height = imgH + 'px';
+    lbImg.style.backgroundImage = bg;
+    lbImg.style.backgroundSize = 'contain';
+    lbImg.style.backgroundRepeat = 'no-repeat';
+    lbImg.style.backgroundPosition = 'center';
+    lbImg.style.borderRadius = '2px';
+    var title = card.querySelector('.art-info h3').textContent;
+    var detail = card.querySelector('.art-info p').textContent;
+    lbCaption.innerHTML = '<strong>' + title + '</strong><span>' + detail + '</span>';
+    lightbox.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeLightbox() {
+    lightbox.classList.remove('open');
+    document.body.style.overflow = '';
+    currentIndex = -1;
+  }
+
+  document.getElementById('lb-close').addEventListener('click', closeLightbox);
+  document.getElementById('lb-prev').addEventListener('click', function() {
+    openLightbox(currentIndex - 1);
+  });
+  document.getElementById('lb-next').addEventListener('click', function() {
+    openLightbox(currentIndex + 1);
+  });
+  lightbox.addEventListener('click', function(e) {
+    if (e.target === lightbox) closeLightbox();
+  });
+  document.addEventListener('keydown', function(e) {
+    if (!lightbox.classList.contains('open')) return;
+    if (e.key === 'Escape') closeLightbox();
+    if (e.key === 'ArrowLeft') openLightbox(currentIndex - 1);
+    if (e.key === 'ArrowRight') openLightbox(currentIndex + 1);
+  });
+})();
+</script>
+</body>
+</html>
