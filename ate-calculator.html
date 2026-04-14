@@ -4,7 +4,16 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>ATE Calculator — Agentic Task Exposure | Ravish Gupta</title>
-  <meta name="description" content="Interactive calculator for the Agentic Task Exposure (ATE) score from 'Agentic AI and Occupational Displacement' (arXiv:2604.00186) by Gupta & Kumar, 2026." />
+  <meta name="description" content="Interactive calculator for the Agentic Task Exposure (ATE) score from 'Agentic AI and Occupational Displacement' (arXiv:2604.00186) by Gupta & Kumar, 2026. Compute your occupation's AI displacement risk across 5 US tech hubs." />
+  <link rel="canonical" href="https://ravyg.github.io/ate-calculator.html" />
+  <meta property="og:title" content="Agentic Task Exposure Calculator — Calculate Your AI Displacement Risk" />
+  <meta property="og:description" content="Compute your occupation's ATE score based on the peer-reviewed Acemoglu–Restrepo extension framework. 236 occupations · 5 US tech hubs · arXiv:2604.00186" />
+  <meta property="og:url" content="https://ravyg.github.io/ate-calculator.html" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Ravish Gupta" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Agentic Task Exposure Calculator" />
+  <meta name="twitter:description" content="Compute your occupation's AI displacement risk. Based on arXiv:2604.00186 (Gupta & Kumar, 2026)." />
   <!-- Google tag (gtag.js) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-D70L327TLV"></script>
   <script>
@@ -37,8 +46,12 @@
       background-size: 40px 40px; pointer-events: none;
     }
     .ate-header-inner { max-width: 760px; margin: 0 auto; position: relative; }
-    .ate-back { display: inline-block; font-size: 11px; letter-spacing: 0.1em; color: #6a6050; text-decoration: none; margin-bottom: 14px; text-transform: uppercase; font-family: monospace; transition: color 0.15s; }
-    .ate-back:hover { color: #b8aaff; }
+    .ate-top-nav { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; margin-bottom: 14px; }
+    .ate-back { display: inline-block; font-size: 11px; letter-spacing: 0.1em; color: #6a6050; text-decoration: none; text-transform: uppercase; font-family: monospace; transition: color 0.15s; }
+    .ate-back:hover { color: #ffb684; }
+    .ate-paper-link { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 600; color: #ff8c42; text-decoration: none; font-family: monospace; letter-spacing: 0.04em; padding: 6px 14px; border-radius: 20px; background: rgba(255,140,66,0.1); border: 1px solid rgba(255,140,66,0.35); transition: all 0.2s; }
+    .ate-paper-link:hover { background: rgba(255,140,66,0.2); border-color: #ff8c42; color: #ffb684; transform: translateY(-1px); box-shadow: 0 4px 12px rgba(255,140,66,0.2); }
+    .ate-paper-link svg { width: 12px; height: 12px; }
     .ate-eyebrow { font-size: 11px; letter-spacing: 0.22em; color: #7c6af7; text-transform: uppercase; margin-bottom: 10px; font-family: monospace; }
     .ate-header h1 { font-size: clamp(28px, 5vw, 48px); font-weight: 400; letter-spacing: -0.02em; line-height: 1.15; margin: 0 0 12px; color: #f0ece4; }
     .ate-header h1 span { color: #7c6af7; }
@@ -135,11 +148,43 @@
     .ate-pivot-score-label { font-size: 10px; color: #444; font-family: monospace; }
     .ate-pivot-footer { margin-top: 16px; padding: 12px 16px; background: rgba(62,201,167,0.08); border-radius: 8px; font-size: 12px; color: #3ec9a7; line-height: 1.6; }
 
-    /* Citation */
-    .ate-cite { margin-top: 24px; padding: 16px 20px; background: rgba(124,106,247,0.06); border-radius: 10px; border: 1px solid rgba(124,106,247,0.12); }
-    .ate-cite-label { font-size: 11px; color: #7c6af7; font-family: monospace; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 6px; }
-    .ate-cite-text { font-size: 12px; color: #6a6050; font-family: monospace; line-height: 1.7; }
-    .ate-cite-text em { color: #8a8070; }
+    /* SHARE */
+    .ate-share { margin-top: 24px; padding: 20px 22px; background: linear-gradient(135deg, rgba(124,106,247,0.08), rgba(62,201,167,0.06)); border-radius: 12px; border: 1px solid rgba(124,106,247,0.18); }
+    .ate-share-title { font-size: 14px; color: #f0ece4; margin-bottom: 4px; font-weight: 500; }
+    .ate-share-sub { font-size: 12px; color: #8a8070; margin-bottom: 14px; font-family: monospace; letter-spacing: 0.04em; }
+    .ate-share-hint { font-size: 11px; color: #6a6050; margin-top: 10px; font-style: italic; line-height: 1.5; }
+    .ate-toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(20px); background: #3ec9a7; color: #0a0a0f; padding: 12px 22px; border-radius: 8px; font-size: 13px; font-weight: 600; opacity: 0; transition: opacity 0.25s, transform 0.25s; pointer-events: none; z-index: 999; box-shadow: 0 8px 32px rgba(0,0,0,0.4); }
+    .ate-toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+    .ate-share-buttons { display: flex; flex-wrap: wrap; gap: 8px; }
+    .ate-share-btn { display: inline-flex; align-items: center; gap: 7px; padding: 8px 14px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.04); color: #e8e0d0; font-size: 12px; text-decoration: none; cursor: pointer; font-family: inherit; transition: all 0.2s; font-weight: 500; }
+    .ate-share-btn:hover { background: rgba(255,255,255,0.08); border-color: rgba(124,106,247,0.4); transform: translateY(-1px); }
+    .ate-share-btn svg { width: 14px; height: 14px; }
+    .ate-share-btn.linkedin:hover { border-color: #0a66c2; color: #4a9de8; }
+    .ate-share-btn.x:hover { border-color: #888; color: #fff; }
+    .ate-share-btn.facebook:hover { border-color: #1877f2; color: #4a9de8; }
+    .ate-share-btn.whatsapp:hover { border-color: #25d366; color: #5dd88e; }
+    .ate-share-btn.instagram:hover { border-color: #e4405f; color: #f3718a; }
+    .ate-share-btn.copy:hover { border-color: #e8c138; color: #e8c138; }
+    .ate-share-btn.copy.copied { border-color: #3ec9a7; color: #3ec9a7; }
+    .ate-share-footer { margin-top: 12px; padding-top: 12px; border-top: 1px solid rgba(255,255,255,0.06); display: flex; flex-wrap: wrap; gap: 16px; font-size: 11px; color: #6a6050; font-family: monospace; }
+    .ate-share-footer a { color: #7c6af7; text-decoration: none; }
+    .ate-share-footer a:hover { color: #b8aaff; text-decoration: underline; }
+
+    /* Citation — warm amber/orange palette */
+    .ate-cite { margin-top: 24px; padding: 20px 22px; background: rgba(249,115,22,0.06); border-radius: 10px; border: 1px solid rgba(249,115,22,0.18); }
+    .ate-cite-label { font-size: 11px; color: #fb923c; font-family: monospace; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 12px; }
+    .ate-cite-tabs { display: flex; gap: 4px; margin-bottom: 12px; flex-wrap: wrap; }
+    .ate-cite-tab { padding: 6px 12px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.08); background: transparent; color: #6a6050; font-size: 11px; font-family: monospace; cursor: pointer; text-transform: uppercase; letter-spacing: 0.08em; transition: all 0.15s; }
+    .ate-cite-tab:hover { color: #fb923c; border-color: rgba(249,115,22,0.35); }
+    .ate-cite-tab.active { background: rgba(249,115,22,0.15); border-color: #fb923c; color: #ffb684; }
+    .ate-cite-content { background: rgba(0,0,0,0.22); border-radius: 6px; padding: 12px 14px; font-family: monospace; font-size: 12px; color: #a89680; line-height: 1.7; white-space: pre-wrap; word-break: break-word; position: relative; }
+    .ate-cite-content em { color: #ffb684; font-style: italic; }
+    .ate-cite-copy { position: absolute; top: 8px; right: 8px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.08); color: #6a6050; padding: 4px 10px; border-radius: 4px; font-size: 10px; cursor: pointer; font-family: monospace; letter-spacing: 0.08em; text-transform: uppercase; transition: all 0.15s; }
+    .ate-cite-copy:hover { border-color: #fb923c; color: #fb923c; }
+    .ate-cite-copy.copied { border-color: #3ec9a7; color: #3ec9a7; }
+    .ate-cite-links { margin-top: 12px; display: flex; flex-wrap: wrap; gap: 14px; font-size: 12px; font-family: monospace; }
+    .ate-cite-links a { color: #fb923c; text-decoration: none; }
+    .ate-cite-links a:hover { color: #ffb684; text-decoration: underline; }
 
     /* Empty state */
     .ate-empty { text-align: center; padding: 64px 24px; }
@@ -165,7 +210,13 @@
 
 <div class="ate-header">
   <div class="ate-header-inner">
-    <a class="ate-back" href="index.html">&larr; Back to Profile</a>
+    <div class="ate-top-nav">
+      <a class="ate-back" href="index.html">&larr; Back to Profile</a>
+      <a class="ate-paper-link" href="https://arxiv.org/abs/2604.00186" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+        Read the Paper on arXiv &rarr;
+      </a>
+    </div>
     <div class="ate-eyebrow">arxiv:2604.00186 &middot; Gupta &amp; Kumar, 2026</div>
     <h1>Agentic Task Exposure<span> Calculator</span></h1>
     <p>Compute your occupation's ATE score using the peer-reviewed formula from the Acemoglu&ndash;Restrepo extension framework. Includes regional S-curve adoption modeling across 5 US tech hubs.</p>
@@ -188,6 +239,9 @@
 
   <!-- Results container -->
   <div id="results"></div>
+
+  <!-- Toast -->
+  <div class="ate-toast" id="toast"></div>
 
   <!-- Footer -->
   <div class="ate-footer">
@@ -418,9 +472,56 @@ function renderResults() {
 
     <div id="panel"></div>
 
+    <div class="ate-share">
+      <div class="ate-share-title">Share your ATE score</div>
+      <div class="ate-share-sub">${esc(state.selected.title)} &middot; ${esc(REGIONS[state.region].label)} &middot; ${(currentScore * 100).toFixed(1)}</div>
+      <div class="ate-share-buttons">
+        <button class="ate-share-btn linkedin" id="share-linkedin">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.5 2h-17A1.5 1.5 0 002 3.5v17A1.5 1.5 0 003.5 22h17a1.5 1.5 0 001.5-1.5v-17A1.5 1.5 0 0020.5 2zM8 19H5v-9h3zM6.5 8.25A1.75 1.75 0 118.3 6.5a1.78 1.78 0 01-1.8 1.75zM19 19h-3v-4.74c0-1.42-.6-1.93-1.38-1.93A1.74 1.74 0 0013 14.19a.66.66 0 000 .14V19h-3v-9h2.9v1.3a3.11 3.11 0 012.7-1.4c1.55 0 3.36.86 3.36 3.66z"/></svg>
+          LinkedIn
+        </button>
+        <a class="ate-share-btn x" id="share-x" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+          X
+        </a>
+        <a class="ate-share-btn facebook" id="share-facebook" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M22 12c0-5.52-4.48-10-10-10S2 6.48 2 12c0 4.84 3.44 8.87 8 9.8V15H8v-3h2V9.5C10 7.57 11.57 6 13.5 6H16v3h-2c-.55 0-1 .45-1 1v2h3v3h-3v6.95c5.05-.5 9-4.76 9-9.95z"/></svg>
+          Facebook
+        </a>
+        <a class="ate-share-btn whatsapp" id="share-whatsapp" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.6 6.32A7.85 7.85 0 0012.05 4a7.94 7.94 0 00-6.88 11.9L4 20l4.2-1.1a7.93 7.93 0 003.79.97h.01a7.94 7.94 0 007.93-7.93 7.88 7.88 0 00-2.33-5.62zm-5.55 12.21h-.01a6.6 6.6 0 01-3.36-.92l-.24-.14-2.49.65.67-2.43-.16-.25a6.59 6.59 0 0110.17-8.13 6.54 6.54 0 011.93 4.68 6.6 6.6 0 01-6.51 6.54zm3.61-4.93c-.2-.1-1.17-.58-1.35-.64s-.31-.1-.45.1-.51.64-.62.77-.23.15-.42.05a5.42 5.42 0 01-1.6-.99 5.98 5.98 0 01-1.1-1.37c-.12-.2-.01-.3.08-.4.09-.09.2-.23.3-.35.1-.12.13-.2.2-.33a.37.37 0 000-.35c-.05-.1-.45-1.08-.62-1.48-.16-.39-.33-.33-.45-.34l-.38-.01a.73.73 0 00-.53.25 2.22 2.22 0 00-.7 1.65 3.87 3.87 0 00.82 2.05 8.85 8.85 0 003.38 2.98c.47.2.84.33 1.13.42a2.74 2.74 0 001.25.08 2.05 2.05 0 001.34-.94 1.66 1.66 0 00.12-.94c-.05-.09-.18-.14-.38-.23z"/></svg>
+          WhatsApp
+        </a>
+        <button class="ate-share-btn instagram" id="share-instagram">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.16c3.2 0 3.58 0 4.85.07 1.17.05 1.8.25 2.23.41.56.22.96.48 1.38.9.42.41.68.82.9 1.37.16.42.36 1.06.41 2.23.06 1.27.07 1.65.07 4.85s0 3.58-.07 4.85c-.05 1.17-.25 1.8-.41 2.23a3.7 3.7 0 01-.9 1.38 3.7 3.7 0 01-1.37.9c-.42.16-1.06.36-2.23.41-1.27.06-1.65.07-4.85.07s-3.58 0-4.85-.07c-1.17-.05-1.8-.25-2.23-.41a3.7 3.7 0 01-1.38-.9 3.7 3.7 0 01-.9-1.37c-.16-.42-.36-1.06-.41-2.23C2.16 15.58 2.15 15.2 2.15 12s0-3.58.07-4.85c.05-1.17.25-1.8.41-2.23.22-.56.48-.96.9-1.38.41-.42.82-.68 1.37-.9.42-.16 1.06-.36 2.23-.41C8.42 2.16 8.8 2.15 12 2.15zm0-2.15C8.74 0 8.33 0 7.05.07c-1.28.07-2.15.27-2.92.57-.8.3-1.47.72-2.14 1.39A5.93 5.93 0 00.63 4.17c-.3.76-.5 1.64-.57 2.92C0 8.33 0 8.74 0 12s0 3.67.06 4.94c.06 1.28.26 2.16.56 2.92.3.8.72 1.47 1.39 2.14a5.93 5.93 0 002.14 1.4c.76.29 1.64.5 2.92.56 1.28.06 1.7.07 4.95.07 3.26 0 3.67 0 4.95-.07 1.28-.06 2.16-.26 2.92-.56a5.93 5.93 0 002.14-1.4 5.93 5.93 0 001.4-2.13c.29-.76.5-1.64.56-2.92.06-1.28.07-1.7.07-4.95s0-3.67-.07-4.95c-.06-1.28-.26-2.16-.56-2.92a5.93 5.93 0 00-1.4-2.14A5.93 5.93 0 0019.83.63c-.76-.3-1.64-.5-2.92-.57C15.67 0 15.26 0 12 0zm0 5.84a6.16 6.16 0 100 12.32 6.16 6.16 0 000-12.32zm0 10.16a4 4 0 110-8 4 4 0 010 8zm7.85-10.4a1.44 1.44 0 11-2.88 0 1.44 1.44 0 012.88 0z"/></svg>
+          Instagram
+        </button>
+        <button class="ate-share-btn copy" id="share-copy">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+          <span id="copy-label">Copy Link</span>
+        </button>
+      </div>
+      <div class="ate-share-hint">LinkedIn &amp; Instagram don't support pre-filled posts from the web. Clicking either copies your score to the clipboard &mdash; paste it into the app/post.</div>
+      <div class="ate-share-footer">
+        <a href="https://arxiv.org/abs/2604.00186" target="_blank">&rarr; Paper on arXiv</a>
+        <a href="https://ravyg.github.io" target="_blank">&rarr; ravyg.github.io</a>
+      </div>
+    </div>
+
     <div class="ate-cite">
       <div class="ate-cite-label">Cite this work</div>
-      <div class="ate-cite-text">Gupta, R., &amp; Kumar, S. (2026). Agentic AI and Occupational Displacement: A Multi-Regional Task Exposure Analysis of Emerging Labor Market Disruption. <em>arXiv:2604.00186</em></div>
+      <div class="ate-cite-tabs">
+        <button class="ate-cite-tab active" data-cite="apa">APA</button>
+        <button class="ate-cite-tab" data-cite="bibtex">BibTeX</button>
+        <button class="ate-cite-tab" data-cite="plain">Plain</button>
+      </div>
+      <div class="ate-cite-content" id="cite-content"></div>
+      <div class="ate-cite-links">
+        <a href="https://arxiv.org/abs/2604.00186" target="_blank" rel="noopener">&rarr; arXiv abstract</a>
+        <a href="https://arxiv.org/pdf/2604.00186" target="_blank" rel="noopener">&rarr; PDF</a>
+        <a href="https://scholar.google.com/scholar?q=Agentic+AI+and+Occupational+Displacement+Gupta+Kumar" target="_blank" rel="noopener">&rarr; Google Scholar</a>
+        <a href="https://arxiv.org/bibtex/2604.00186" target="_blank" rel="noopener">&rarr; arXiv BibTeX</a>
+      </div>
     </div>
   `;
 
@@ -433,7 +534,187 @@ function renderResults() {
     });
   });
 
+  // Share buttons
+  wireShare(currentScore);
+
+  // Citation tabs
+  wireCitation();
+
+  // Update URL query params (shareable link)
+  updateURLParams();
+
   renderPanel(currentScore, risk);
+}
+
+const CITATIONS = {
+  apa: `Gupta, R., & Kumar, S. (2026). Agentic AI and Occupational Displacement: A Multi-Regional Task Exposure Analysis of Emerging Labor Market Disruption. arXiv preprint arXiv:2604.00186.`,
+  bibtex: `@article{gupta2026agentic,
+  title   = {Agentic AI and Occupational Displacement: A Multi-Regional Task Exposure Analysis of Emerging Labor Market Disruption},
+  author  = {Gupta, Ravish and Kumar, Saket},
+  journal = {arXiv preprint arXiv:2604.00186},
+  year    = {2026}
+}`,
+  plain: `Gupta, Ravish and Saket Kumar. "Agentic AI and Occupational Displacement: A Multi-Regional Task Exposure Analysis of Emerging Labor Market Disruption." arXiv:2604.00186 (2026).`,
+};
+
+let activeCiteTab = 'apa';
+
+function renderCitation() {
+  const el = document.getElementById('cite-content');
+  if (!el) return;
+  const text = CITATIONS[activeCiteTab];
+  el.innerHTML = `<button class="ate-cite-copy" id="cite-copy">Copy</button>${esc(text)}`;
+  document.getElementById('cite-copy').addEventListener('click', (e) => {
+    e.stopPropagation();
+    navigator.clipboard.writeText(text).then(() => {
+      const btn = document.getElementById('cite-copy');
+      btn.classList.add('copied');
+      btn.textContent = 'Copied!';
+      setTimeout(() => {
+        btn.classList.remove('copied');
+        btn.textContent = 'Copy';
+      }, 1800);
+    });
+  });
+}
+
+function wireCitation() {
+  document.querySelectorAll('.ate-cite-tab').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.cite === activeCiteTab);
+    btn.addEventListener('click', () => {
+      activeCiteTab = btn.dataset.cite;
+      document.querySelectorAll('.ate-cite-tab').forEach(b => b.classList.toggle('active', b.dataset.cite === activeCiteTab));
+      renderCitation();
+    });
+  });
+  renderCitation();
+}
+
+function showToast(msg, duration) {
+  const toast = document.getElementById('toast');
+  if (!toast) return;
+  toast.textContent = msg;
+  toast.classList.add('show');
+  setTimeout(() => toast.classList.remove('show'), duration || 2800);
+}
+
+function buildShareData(currentScore) {
+  const url = window.location.origin + window.location.pathname
+    + '?occ=' + encodeURIComponent(state.selected.soc)
+    + '&region=' + encodeURIComponent(state.region);
+  const scorePct = (currentScore * 100).toFixed(1);
+  const risk = getRiskLevel(currentScore);
+  // Short version for X (280-char limit; URL counts as 23)
+  const shortText = `My ATE (Agentic Task Exposure) score: ${state.selected.title} in ${REGIONS[state.region].label} = ${scorePct} — ${risk.label} (2026).\n\nBased on arXiv:2604.00186. Calculate yours:`;
+  // Full version for LinkedIn, Facebook, WhatsApp, Copy Link
+  const fullText = `My Agentic Task Exposure (ATE) score as ${state.selected.title} in ${REGIONS[state.region].label} is ${scorePct} (${risk.label}) for 2026.\n\nBased on Gupta & Kumar's paper "Agentic AI and Occupational Displacement" (arXiv:2604.00186). Calculate yours:`;
+  return { url, shortText, fullText, scorePct, risk };
+}
+
+function wireShare(currentScore) {
+  const { url, shortText, fullText } = buildShareData(currentScore);
+  const encodedUrl = encodeURIComponent(url);
+  const encShort = encodeURIComponent(shortText);
+  const encFull = encodeURIComponent(fullText);
+  const whatsappShare = encodeURIComponent(fullText + '\n' + url);
+
+  // LinkedIn: copy text to clipboard (LinkedIn strips custom text since 2021) then open composer
+  const li = document.getElementById('share-linkedin');
+  if (li) li.addEventListener('click', () => {
+    const shareText = fullText + '\n' + url;
+    navigator.clipboard.writeText(shareText).then(() => {
+      showToast('Text copied! Paste it into your LinkedIn post');
+      setTimeout(() => {
+        window.open('https://www.linkedin.com/feed/?shareActive=true', '_blank', 'noopener');
+      }, 800);
+    }).catch(() => {
+      // Fallback: just open LinkedIn
+      window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${encodedUrl}`, '_blank', 'noopener');
+    });
+  });
+
+  // X: short text to stay under 280 chars
+  const xb = document.getElementById('share-x');
+  if (xb) xb.href = `https://twitter.com/intent/tweet?text=${encShort}&url=${encodedUrl}`;
+
+  const fb = document.getElementById('share-facebook');
+  if (fb) fb.href = `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}&quote=${encFull}`;
+
+  const wa = document.getElementById('share-whatsapp');
+  if (wa) wa.href = `https://wa.me/?text=${whatsappShare}`;
+
+  // Instagram: no web share API exists. On mobile, try native share sheet
+  // (which includes the Instagram app). On desktop, copy text and tell the
+  // user to paste it in the Instagram app/site themselves.
+  const ig = document.getElementById('share-instagram');
+  if (ig) ig.addEventListener('click', async () => {
+    const shareText = fullText + '\n' + url;
+    const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+
+    // Try native share sheet first (best on mobile)
+    if (isMobile && navigator.share) {
+      try {
+        await navigator.share({
+          title: 'My ATE Score',
+          text: fullText,
+          url: url,
+        });
+        return;
+      } catch (e) {
+        // user cancelled or error; fall through to copy
+      }
+    }
+
+    // Desktop / fallback: copy to clipboard, then redirect to Instagram
+    try {
+      await navigator.clipboard.writeText(shareText);
+      showToast('Copied! Paste it into your Instagram post or story', 3500);
+    } catch (e) {
+      showToast('Could not copy. Use Copy Link button instead.', 3000);
+    }
+    setTimeout(() => {
+      window.open('https://www.instagram.com/', '_blank', 'noopener');
+    }, 900);
+  });
+
+  const cp = document.getElementById('share-copy');
+  if (cp) cp.addEventListener('click', () => {
+    navigator.clipboard.writeText(fullText + '\n' + url).then(() => {
+      cp.classList.add('copied');
+      document.getElementById('copy-label').textContent = 'Copied!';
+      setTimeout(() => {
+        cp.classList.remove('copied');
+        document.getElementById('copy-label').textContent = 'Copy Link';
+      }, 2000);
+    }).catch(() => {
+      document.getElementById('copy-label').textContent = 'Copy failed';
+    });
+  });
+}
+
+function updateURLParams() {
+  if (!state.selected) return;
+  const params = new URLSearchParams();
+  params.set('occ', state.selected.soc);
+  params.set('region', state.region);
+  const newUrl = window.location.pathname + '?' + params.toString();
+  window.history.replaceState(null, '', newUrl);
+}
+
+function loadFromURL() {
+  const params = new URLSearchParams(window.location.search);
+  const occ = params.get('occ');
+  const region = params.get('region');
+  if (region && REGIONS[region]) state.region = region;
+  if (occ) {
+    const found = OCCUPATIONS.find(o => o.soc === occ);
+    if (found) {
+      state.selected = found;
+      state.search = found.title;
+      searchInput.value = found.title;
+      clearBtn.style.display = '';
+    }
+  }
 }
 
 function renderPanel(currentScore, risk) {
@@ -460,7 +741,9 @@ function renderPanel(currentScore, risk) {
       </div>
     `;
   } else if (state.activeTab === 'timeline') {
-    const years = [2025, 2026, 2027, 2028, 2029, 2030];
+    // Use actual years from paper data (2029 is not computed in source CSV)
+    const regionScores = state.selected.scores[state.region] || {};
+    const years = Object.keys(regionScores).map(Number).sort((a, b) => a - b);
     const data = years.map(y => ({ year: y, score: getScore(state.selected, state.region, y) }));
     panel.innerHTML = `
       <div class="ate-panel">
@@ -578,8 +861,13 @@ fetch('data/ate-data.json')
     REINSTATEMENT_ROLES = data.reinstatement_roles;
     RISK_LEVELS = data.risk_levels;
     SOC_GROUPS = data.soc_groups;
+    loadFromURL();
     renderRegions();
-    renderResults();
+    if (state.selected) {
+      animateAndRender();
+    } else {
+      renderResults();
+    }
   })
   .catch(err => {
     resultsEl.innerHTML = '<div class="ate-empty"><div class="ate-empty-title" style="color:#e8394a;">Failed to load ATE data</div><div class="ate-empty-sub">' + err + '</div></div>';
