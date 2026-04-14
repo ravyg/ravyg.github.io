@@ -33,6 +33,20 @@
     button { font-family: inherit; }
     input { font-family: inherit; }
 
+    /* TOP NAV BAR */
+    .top-nav { position: sticky; top: 0; z-index: 50; background: rgba(10,10,15,0.92); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-bottom: 1px solid rgba(255,255,255,0.06); padding: 0 24px; display: flex; justify-content: space-between; align-items: center; height: 52px; }
+    .top-nav .logo { font-family: 'Georgia', serif; font-size: 15px; font-weight: 600; color: #f0ece4; text-decoration: none; letter-spacing: 0.02em; }
+    .top-nav .logo:hover { color: #ff8c42; }
+    .top-nav .links { display: flex; gap: 1.5rem; align-items: center; }
+    .top-nav .links a { font-family: monospace; font-size: 11px; color: #8a8070; text-decoration: none; text-transform: uppercase; letter-spacing: 0.1em; transition: color 0.15s; }
+    .top-nav .links a:hover { color: #ff8c42; }
+    .top-nav .links a.active { color: #ff8c42; }
+    @media (max-width: 600px) {
+      .top-nav { padding: 0 16px; }
+      .top-nav .links { gap: 0.9rem; }
+      .top-nav .links a { font-size: 10px; }
+    }
+
     /* HEADER */
     .ate-header {
       background: linear-gradient(135deg, #0f0f1a 0%, #1a1228 50%, #0f1a18 100%);
@@ -207,12 +221,21 @@
 </head>
 <body>
 
+<nav class="top-nav">
+  <a class="logo" href="index.html">Ravish Gupta</a>
+  <div class="links">
+    <a href="index.html">Profile</a>
+    <a href="index.html#research">Research</a>
+    <a href="ate-calculator.html" class="active">ATE Calculator</a>
+    <a href="gallery.html">Creative Portal</a>
+  </div>
+</nav>
+
 <div class="dev-banner"><span class="dot"></span>Development in Progress &middot; Preliminary data &amp; calibration</div>
 
 <div class="ate-header">
   <div class="ate-header-inner">
-    <div class="ate-top-nav">
-      <a class="ate-back" href="index.html">&larr; Back to Profile</a>
+    <div class="ate-top-nav" style="justify-content:flex-end;">
       <a class="ate-paper-link" href="https://arxiv.org/abs/2604.00186" target="_blank" rel="noopener">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
         Read the Paper on arXiv &rarr;
