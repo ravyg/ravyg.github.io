@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ATE Calculator — Agentic Task Exposure | Ravish Gupta</title>
+  <meta name="description" content="Interactive calculator for the Agentic Task Exposure (ATE) score from 'Agentic AI and Occupational Displacement' (arXiv:2604.00186) by Gupta & Kumar, 2026." />
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-D70L327TLV"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-D70L327TLV');
+  </script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      min-height: 100vh; background: #0a0a0f;
+      font-family: 'Georgia', 'Times New Roman', serif;
+      color: #e8e0d0; overflow-x: hidden;
+    }
+    a { color: inherit; }
+    button { font-family: inherit; }
+    input { font-family: inherit; }
+
+    /* HEADER */
+    .ate-header {
+      background: linear-gradient(135deg, #0f0f1a 0%, #1a1228 50%, #0f1a18 100%);
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      padding: 40px 32px 32px;
+      position: relative; overflow: hidden;
+    }
+    .ate-header::before {
+      content: ''; position: absolute; inset: 0;
+      background-image: linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+      background-size: 40px 40px; pointer-events: none;
+    }
+    .ate-header-inner { max-width: 760px; margin: 0 auto; position: relative; }
+    .ate-back { display: inline-block; font-size: 11px; letter-spacing: 0.1em; color: #6a6050; text-decoration: none; margin-bottom: 14px; text-transform: uppercase; font-family: monospace; transition: color 0.15s; }
+    .ate-back:hover { color: #b8aaff; }
+    .ate-eyebrow { font-size: 11px; letter-spacing: 0.22em; color: #7c6af7; text-transform: uppercase; margin-bottom: 10px; font-family: monospace; }
+    .ate-header h1 { font-size: clamp(28px, 5vw, 48px); font-weight: 400; letter-spacing: -0.02em; line-height: 1.15; margin: 0 0 12px; color: #f0ece4; }
+    .ate-header h1 span { color: #7c6af7; }
+    .ate-header p { font-size: 15px; color: #8a8070; line-height: 1.6; max-width: 520px; margin: 0; }
+
+    .ate-main { max-width: 760px; margin: 0 auto; padding: 32px 24px; }
+
+    /* SEARCH */
+    .ate-search-wrap { position: relative; margin-bottom: 24px; }
+    .ate-search-box { display: flex; align-items: center; background: #13131f; border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; overflow: hidden; box-shadow: 0 4px 24px rgba(0,0,0,0.4); }
+    .ate-search-icon { padding: 0 16px; color: #555; font-size: 18px; }
+    .ate-search-input { flex: 1; background: transparent; border: none; outline: none; color: #e8e0d0; font-size: 15px; padding: 16px 0; }
+    .ate-search-input::placeholder { color: #444; }
+    .ate-clear-btn { background: none; border: none; color: #555; font-size: 18px; padding: 0 16px; cursor: pointer; }
+    .ate-dropdown { position: absolute; top: 100%; left: 0; right: 0; z-index: 100; background: #13131f; border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; margin-top: 4px; box-shadow: 0 16px 48px rgba(0,0,0,0.6); overflow: hidden; display: none; }
+    .ate-dropdown.open { display: block; }
+    .ate-dropdown-item { padding: 12px 18px; cursor: pointer; border-bottom: 1px solid rgba(255,255,255,0.04); display: flex; justify-content: space-between; align-items: center; transition: background 0.15s; }
+    .ate-dropdown-item:last-child { border-bottom: none; }
+    .ate-dropdown-item:hover { background: rgba(124,106,247,0.1); }
+    .ate-dropdown-title { font-size: 14px; color: #e8e0d0; }
+    .ate-dropdown-sub { font-size: 11px; color: #555; margin-top: 2px; font-family: monospace; }
+    .ate-dropdown-group { font-size: 12px; padding: 3px 10px; border-radius: 20px; white-space: nowrap; }
+
+    /* REGION */
+    .ate-regions { display: flex; gap: 8px; margin-bottom: 32px; flex-wrap: wrap; }
+    .ate-region-btn { padding: 8px 14px; border-radius: 20px; font-size: 12px; border: 1px solid rgba(255,255,255,0.08); background: transparent; color: #6a6050; cursor: pointer; transition: all 0.2s; font-family: monospace; }
+    .ate-region-btn.active { border-color: #7c6af7; background: rgba(124,106,247,0.15); color: #b8aaff; }
+
+    /* SCORE CARD */
+    .ate-score-card { background: linear-gradient(135deg, #13131f 0%, #1a1228 100%); border-radius: 16px; padding: 32px; margin-bottom: 24px; transition: box-shadow 0.3s, border-color 0.3s; }
+    .ate-score-head { display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 16px; }
+    .ate-soc { font-size: 11px; letter-spacing: 0.18em; color: #555; text-transform: uppercase; font-family: monospace; margin-bottom: 8px; }
+    .ate-title { font-size: clamp(20px, 4vw, 28px); font-weight: 400; margin: 0; color: #f0ece4; }
+    .ate-region-label { margin-top: 8px; font-size: 13px; color: #6a6050; }
+    .ate-score-num { font-size: clamp(44px, 8vw, 64px); font-weight: 300; line-height: 1; font-variant-numeric: tabular-nums; }
+    .ate-score-label { font-size: 13px; color: #555; margin-top: 2px; text-align: right; }
+
+    .ate-progress { margin-top: 24px; height: 4px; background: rgba(255,255,255,0.06); border-radius: 2px; overflow: hidden; }
+    .ate-progress-fill { height: 100%; border-radius: 2px; transition: width 0.9s cubic-bezier(0.16,1,0.3,1); }
+    .ate-risk-scale { display: flex; gap: 0; margin-top: 8px; }
+    .ate-risk-seg { flex: 1; height: 3px; }
+    .ate-risk-seg:first-child { border-radius: 2px 0 0 2px; }
+    .ate-risk-seg:last-child { border-radius: 0 2px 2px 0; }
+
+    .ate-risk-box { margin-top: 20px; padding: 14px 18px; border-radius: 8px; }
+    .ate-risk-label { font-size: 13px; font-weight: 600; margin-bottom: 4px; }
+    .ate-risk-desc { font-size: 13px; color: #8a8070; line-height: 1.5; }
+
+    .ate-factors { margin-top: 20px; display: grid; grid-template-columns: repeat(3,1fr); gap: 12px; }
+    .ate-factor { background: rgba(255,255,255,0.03); border-radius: 8px; padding: 12px 14px; border: 1px solid rgba(255,255,255,0.06); }
+    .ate-factor-val { font-size: 18px; color: #e8e0d0; font-variant-numeric: tabular-nums; }
+    .ate-factor-label { font-size: 10px; color: #555; margin-top: 4px; text-transform: uppercase; letter-spacing: 0.1em; font-family: monospace; }
+
+    /* TABS */
+    .ate-tabs { display: flex; gap: 4px; margin-bottom: 20px; background: #13131f; border-radius: 10px; padding: 4px; border: 1px solid rgba(255,255,255,0.06); }
+    .ate-tab { flex: 1; padding: 10px 8px; border-radius: 7px; border: none; background: transparent; color: #555; cursor: pointer; font-size: 12px; font-family: monospace; text-transform: uppercase; letter-spacing: 0.1em; transition: all 0.2s; }
+    .ate-tab.active { background: rgba(124,106,247,0.2); color: #b8aaff; }
+
+    .ate-panel { background: #13131f; border: 1px solid rgba(255,255,255,0.06); border-radius: 16px; padding: 28px 24px; }
+    .ate-panel-title { font-size: 13px; color: #555; font-family: monospace; margin-bottom: 20px; text-transform: uppercase; letter-spacing: 0.12em; }
+
+    /* Timeline */
+    .ate-timeline { display: flex; align-items: flex-end; gap: 12px; height: 180px; padding-top: 24px; }
+    .ate-bar-col { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 6px; position: relative; }
+    .ate-bar-score { font-size: 11px; font-family: monospace; }
+    .ate-bar { width: 100%; border-radius: 4px 4px 0 0; position: relative; transition: height 0.5s ease; }
+    .ate-bar.now { box-shadow: 0 0 16px rgba(124,106,247,0.5); }
+    .ate-bar-now-tag { position: absolute; top: -20px; left: 50%; transform: translateX(-50%); font-size: 9px; color: #7c6af7; font-family: monospace; white-space: nowrap; }
+    .ate-year { font-size: 11px; color: #555; font-family: monospace; }
+    .ate-timeline-footer { margin-top: 20px; padding: 12px 16px; background: rgba(255,255,255,0.03); border-radius: 8px; font-size: 12px; color: #6a6050; line-height: 1.6; }
+
+    /* Regions panel */
+    .ate-region-row { margin-bottom: 16px; }
+    .ate-region-row-head { display: flex; justify-content: space-between; margin-bottom: 6px; }
+    .ate-region-name { font-size: 13px; }
+    .ate-region-score { font-size: 13px; font-family: monospace; }
+    .ate-region-bar { height: 4px; background: rgba(255,255,255,0.06); border-radius: 2px; overflow: hidden; }
+    .ate-region-bar-fill { height: 100%; border-radius: 2px; transition: width 0.6s ease; }
+
+    /* Breakdown */
+    .ate-formula { font-family: monospace; font-size: 13px; color: #7c6af7; padding: 14px 16px; background: rgba(124,106,247,0.08); border-radius: 8px; margin-bottom: 20px; line-height: 1.8; }
+    .ate-formula em { color: #e8c138; font-style: normal; }
+    .ate-formula strong { font-weight: 700; }
+    .ate-breakdown-desc { font-size: 13px; color: #6a6050; line-height: 1.8; }
+    .ate-breakdown-desc strong { color: #8a8070; }
+    .ate-source { font-size: 11px; color: #444; font-family: monospace; }
+
+    /* Pivot roles */
+    .ate-pivot-intro { font-size: 13px; color: #6a6050; margin-bottom: 20px; line-height: 1.5; }
+    .ate-pivot-row { display: flex; justify-content: space-between; align-items: center; padding: 14px 16px; margin-bottom: 8px; background: rgba(255,255,255,0.02); border-radius: 8px; border: 1px solid rgba(255,255,255,0.04); }
+    .ate-pivot-title { font-size: 14px; color: #e8e0d0; }
+    .ate-pivot-desc { font-size: 12px; color: #555; margin-top: 3px; }
+    .ate-pivot-score { font-size: 16px; color: #3ec9a7; font-family: monospace; text-align: right; }
+    .ate-pivot-score-label { font-size: 10px; color: #444; font-family: monospace; }
+    .ate-pivot-footer { margin-top: 16px; padding: 12px 16px; background: rgba(62,201,167,0.08); border-radius: 8px; font-size: 12px; color: #3ec9a7; line-height: 1.6; }
+
+    /* Citation */
+    .ate-cite { margin-top: 24px; padding: 16px 20px; background: rgba(124,106,247,0.06); border-radius: 10px; border: 1px solid rgba(124,106,247,0.12); }
+    .ate-cite-label { font-size: 11px; color: #7c6af7; font-family: monospace; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 6px; }
+    .ate-cite-text { font-size: 12px; color: #6a6050; font-family: monospace; line-height: 1.7; }
+    .ate-cite-text em { color: #8a8070; }
+
+    /* Empty state */
+    .ate-empty { text-align: center; padding: 64px 24px; }
+    .ate-empty-icon { font-size: 48px; margin-bottom: 16px; opacity: 0.3; }
+    .ate-empty-title { font-size: 16px; color: #444; margin-bottom: 8px; }
+    .ate-empty-sub { font-size: 13px; color: #333; }
+    .ate-quick { margin-top: 32px; display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+    .ate-quick-btn { padding: 8px 16px; border-radius: 20px; font-size: 12px; border: 1px solid rgba(255,255,255,0.08); background: transparent; color: #555; cursor: pointer; transition: all 0.2s; }
+    .ate-quick-btn:hover { border-color: rgba(124,106,247,0.4); color: #b8aaff; }
+
+    /* Footer */
+    .ate-footer { margin-top: 48px; padding-top: 24px; border-top: 1px solid rgba(255,255,255,0.06); font-size: 12px; color: #333; font-family: monospace; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
+
+    /* DEV BANNER */
+    .dev-banner { background: linear-gradient(90deg, #e8c138 0%, #f07149 100%); color: #0a0a0f; text-align: center; padding: 10px 20px; font-size: 12px; font-weight: 600; font-family: monospace; letter-spacing: 0.1em; text-transform: uppercase; }
+    .dev-banner .dot { display: inline-block; width: 8px; height: 8px; background: #0a0a0f; border-radius: 50%; margin-right: 8px; vertical-align: middle; animation: pulse 1.5s ease-in-out infinite; }
+    @keyframes pulse { 0%, 100% { opacity: 0.4; } 50% { opacity: 1; } }
+  </style>
+</head>
+<body>
+
+<div class="dev-banner"><span class="dot"></span>Development in Progress &middot; Preliminary data &amp; calibration</div>
+
+<div class="ate-header">
+  <div class="ate-header-inner">
+    <a class="ate-back" href="index.html">&larr; Back to Profile</a>
+    <div class="ate-eyebrow">arxiv:2604.00186 &middot; Gupta &amp; Kumar, 2026</div>
+    <h1>Agentic Task Exposure<span> Calculator</span></h1>
+    <p>Compute your occupation's ATE score using the peer-reviewed formula from the Acemoglu&ndash;Restrepo extension framework. Includes regional S-curve adoption modeling across 5 US tech hubs.</p>
+  </div>
+</div>
+
+<div class="ate-main">
+  <!-- Search -->
+  <div class="ate-search-wrap" id="search-wrap">
+    <div class="ate-search-box">
+      <span class="ate-search-icon">&#x2315;</span>
+      <input class="ate-search-input" id="search-input" placeholder="Search occupation title, group, or SOC code..." />
+      <button class="ate-clear-btn" id="clear-btn" style="display:none;">&times;</button>
+    </div>
+    <div class="ate-dropdown" id="dropdown"></div>
+  </div>
+
+  <!-- Regions -->
+  <div class="ate-regions" id="regions"></div>
+
+  <!-- Results container -->
+  <div id="results"></div>
+
+  <!-- Footer -->
+  <div class="ate-footer">
+    <span>ATE Calculator v1.0 &middot; Based on arXiv:2604.00186</span>
+    <span>Ravish Gupta</span>
+  </div>
+</div>
+
+<script>
+// ── Data ──────────────────────────────────────────────────────────────────
+const REGIONS = {
+  seattle: { label: "Seattle–Tacoma", k: 0.9, t0: 2026.5, L: 1.05 },
+  sf:      { label: "San Francisco Bay Area", k: 1.0, t0: 2026.0, L: 1.08 },
+  austin:  { label: "Austin–Round Rock", k: 0.75, t0: 2027.0, L: 1.0 },
+  nyc:     { label: "New York–Newark", k: 0.85, t0: 2026.8, L: 1.02 },
+  boston:  { label: "Boston–Cambridge", k: 0.8, t0: 2026.9, L: 1.03 },
+};
+
+const OCCUPATIONS = [
+  { soc: "13-2041", title: "Credit Analysts", group: "Financial", base: 0.44, cov: 0.88, cap: 0.82 },
+  { soc: "13-2051", title: "Financial Analysts", group: "Financial", base: 0.41, cov: 0.85, cap: 0.79 },
+  { soc: "13-2052", title: "Personal Financial Advisors", group: "Financial", base: 0.36, cov: 0.74, cap: 0.72 },
+  { soc: "13-2053", title: "Insurance Underwriters", group: "Financial", base: 0.43, cov: 0.87, cap: 0.81 },
+  { soc: "13-2061", title: "Financial Examiners", group: "Financial", base: 0.38, cov: 0.78, cap: 0.74 },
+  { soc: "13-2072", title: "Loan Officers", group: "Financial", base: 0.40, cov: 0.82, cap: 0.77 },
+  { soc: "13-1031", title: "Claims Adjusters", group: "Financial", base: 0.42, cov: 0.86, cap: 0.80 },
+  { soc: "13-2011", title: "Accountants and Auditors", group: "Financial", base: 0.39, cov: 0.80, cap: 0.76 },
+  { soc: "13-2031", title: "Budget Analysts", group: "Financial", base: 0.37, cov: 0.76, cap: 0.73 },
+  { soc: "43-3031", title: "Bookkeeping Clerks", group: "Financial", base: 0.46, cov: 0.91, cap: 0.85 },
+  { soc: "23-1011", title: "Lawyers", group: "Legal", base: 0.38, cov: 0.77, cap: 0.74 },
+  { soc: "23-2011", title: "Paralegals", group: "Legal", base: 0.44, cov: 0.88, cap: 0.82 },
+  { soc: "23-1021", title: "Administrative Law Judges", group: "Legal", base: 0.45, cov: 0.89, cap: 0.83 },
+  { soc: "23-1023", title: "Judges (General)", group: "Legal", base: 0.43, cov: 0.87, cap: 0.81 },
+  { soc: "23-2093", title: "Title Examiners", group: "Legal", base: 0.46, cov: 0.90, cap: 0.84 },
+  { soc: "23-2099", title: "Legal Support Workers", group: "Legal", base: 0.45, cov: 0.89, cap: 0.83 },
+  { soc: "13-1041", title: "Compliance Officers", group: "Legal", base: 0.41, cov: 0.83, cap: 0.78 },
+  { soc: "29-1071", title: "Physician Assistants", group: "Healthcare", base: 0.29, cov: 0.61, cap: 0.60 },
+  { soc: "29-1141", title: "Registered Nurses", group: "Healthcare", base: 0.27, cov: 0.57, cap: 0.57 },
+  { soc: "29-1051", title: "Pharmacists", group: "Healthcare", base: 0.35, cov: 0.72, cap: 0.70 },
+  { soc: "29-2010", title: "Clinical Lab Technicians", group: "Healthcare", base: 0.38, cov: 0.78, cap: 0.74 },
+  { soc: "29-1021", title: "Dentists", group: "Healthcare", base: 0.22, cov: 0.47, cap: 0.50 },
+  { soc: "29-1062", title: "Family Medicine Physicians", group: "Healthcare", base: 0.28, cov: 0.59, cap: 0.58 },
+  { soc: "29-1171", title: "Nurse Practitioners", group: "Healthcare", base: 0.30, cov: 0.63, cap: 0.61 },
+  { soc: "29-2041", title: "Emergency Medical Techs", group: "Healthcare", base: 0.18, cov: 0.40, cap: 0.44 },
+  { soc: "31-9092", title: "Medical Assistants", group: "Healthcare Support", base: 0.40, cov: 0.82, cap: 0.77 },
+  { soc: "31-9094", title: "Medical Transcriptionists", group: "Healthcare Support", base: 0.52, cov: 0.96, cap: 0.90 },
+  { soc: "43-6013", title: "Medical Secretaries", group: "Healthcare Support", base: 0.48, cov: 0.93, cap: 0.87 },
+  { soc: "31-9097", title: "Phlebotomists", group: "Healthcare Support", base: 0.22, cov: 0.47, cap: 0.50 },
+  { soc: "31-9011", title: "Massage Therapists", group: "Healthcare Support", base: 0.10, cov: 0.22, cap: 0.32 },
+  { soc: "41-3021", title: "Insurance Sales Agents", group: "Sales", base: 0.40, cov: 0.82, cap: 0.77 },
+  { soc: "41-3031", title: "Securities & Financial Sales", group: "Sales", base: 0.38, cov: 0.78, cap: 0.74 },
+  { soc: "41-4011", title: "Sales Reps (Wholesale)", group: "Sales", base: 0.35, cov: 0.72, cap: 0.70 },
+  { soc: "41-2031", title: "Retail Salespersons", group: "Sales", base: 0.33, cov: 0.69, cap: 0.67 },
+  { soc: "41-9041", title: "Telemarketers", group: "Sales", base: 0.55, cov: 0.98, cap: 0.93 },
+  { soc: "41-3099", title: "Sales Representatives (Other)", group: "Sales", base: 0.36, cov: 0.74, cap: 0.72 },
+  { soc: "43-9041", title: "Insurance Claims Clerks", group: "Administrative", base: 0.50, cov: 0.95, cap: 0.88 },
+  { soc: "43-4051", title: "Customer Service Reps", group: "Administrative", base: 0.46, cov: 0.91, cap: 0.85 },
+  { soc: "43-6011", title: "Executive Secretaries", group: "Administrative", base: 0.44, cov: 0.88, cap: 0.82 },
+  { soc: "43-9021", title: "Data Entry Keyers", group: "Administrative", base: 0.56, cov: 0.99, cap: 0.94 },
+  { soc: "43-3011", title: "Bill & Account Collectors", group: "Administrative", base: 0.50, cov: 0.94, cap: 0.88 },
+  { soc: "43-1011", title: "Supervisors (Office)", group: "Administrative", base: 0.38, cov: 0.78, cap: 0.74 },
+  { soc: "13-1161", title: "Market Research Analysts", group: "Administrative", base: 0.41, cov: 0.84, cap: 0.79 },
+  { soc: "11-3031", title: "Financial Managers", group: "Financial", base: 0.35, cov: 0.72, cap: 0.70 },
+  { soc: "13-1199", title: "Sustainability Specialists", group: "Administrative", base: 0.45, cov: 0.89, cap: 0.83 },
+];
+
+const REINSTATEMENT_ROLES = [
+  { title: "AI Workflow Orchestrator", description: "Design and manage multi-agent pipelines", ate: 0.08 },
+  { title: "Human-AI Collaboration Specialist", description: "Bridge AI outputs with human decision-making", ate: 0.10 },
+  { title: "AI Governance Analyst", description: "Policy, compliance, and ethics for AI systems", ate: 0.12 },
+  { title: "Prompt Engineer / LLM Ops", description: "Optimize AI model behavior for domain tasks", ate: 0.09 },
+  { title: "AI Auditor", description: "Verify and validate AI decision outputs", ate: 0.11 },
+  { title: "Domain-Specific AI Trainer", description: "Fine-tune and evaluate AI for specialized fields", ate: 0.13 },
+  { title: "Agentic Systems Designer", description: "Architect autonomous AI workflows", ate: 0.10 },
+  { title: "AI Change Manager", description: "Lead workforce transitions to AI-augmented roles", ate: 0.15 },
+];
+
+const GROUP_COLORS = {
+  Financial: "#e8a838",
+  Legal: "#7c6af7",
+  Healthcare: "#3ec9a7",
+  "Healthcare Support": "#e8709a",
+  Sales: "#5bc4f5",
+  Administrative: "#f07149",
+};
+
+const RISK_LEVELS = [
+  { max: 0.25, label: "Low Risk", color: "#3ec9a7", desc: "Agentic AI has limited workflow coverage in your role through 2030." },
+  { max: 0.35, label: "Moderate Risk", color: "#e8c138", desc: "Meaningful exposure developing. Upskilling now gives a strong buffer." },
+  { max: 0.45, label: "High Risk", color: "#f07149", desc: "Substantial agentic AI capability overlap. Strategic pivot recommended by 2027." },
+  { max: 1.0,  label: "Critical Risk", color: "#e8394a", desc: "End-to-end workflow coverage likely by 2028. Transition planning is urgent." },
+];
+
+// ── Math ──────────────────────────────────────────────────────────────────
+function sigmoid(year, k, t0, L) { return L / (1 + Math.exp(-k * (year - t0))); }
+function computeATE(baseScore, region, year) {
+  const r = REGIONS[region];
+  const s = sigmoid(year, r.k, r.t0, r.L);
+  return Math.min(0.99, baseScore * s);
+}
+function getRiskLevel(score) {
+  return RISK_LEVELS.find(r => score <= r.max) || RISK_LEVELS[RISK_LEVELS.length - 1];
+}
+function esc(str) {
+  const div = document.createElement('div');
+  div.appendChild(document.createTextNode(str));
+  return div.innerHTML;
+}
+
+// ── State ─────────────────────────────────────────────────────────────────
+let state = {
+  search: "",
+  selected: null,
+  region: "seattle",
+  activeTab: "score",
+  animScore: 0,
+};
+
+// ── DOM refs ──────────────────────────────────────────────────────────────
+const searchInput = document.getElementById('search-input');
+const clearBtn = document.getElementById('clear-btn');
+const dropdown = document.getElementById('dropdown');
+const regionsEl = document.getElementById('regions');
+const resultsEl = document.getElementById('results');
+const searchWrap = document.getElementById('search-wrap');
+
+// ── Render functions ──────────────────────────────────────────────────────
+function renderRegions() {
+  regionsEl.innerHTML = Object.entries(REGIONS).map(([key, val]) =>
+    `<button class="ate-region-btn ${state.region === key ? 'active' : ''}" data-region="${key}">${esc(val.label)}</button>`
+  ).join('');
+  regionsEl.querySelectorAll('button').forEach(btn => {
+    btn.addEventListener('click', () => {
+      state.region = btn.dataset.region;
+      renderRegions();
+      renderResults();
+    });
+  });
+}
+
+function renderDropdown() {
+  const q = state.search.toLowerCase();
+  const filtered = state.search.length > 1
+    ? OCCUPATIONS.filter(o =>
+        o.title.toLowerCase().includes(q) ||
+        o.group.toLowerCase().includes(q) ||
+        o.soc.includes(state.search)
+      ).slice(0, 8)
+    : [];
+  if (!filtered.length) { dropdown.classList.remove('open'); return; }
+  dropdown.innerHTML = filtered.map(occ =>
+    `<div class="ate-dropdown-item" data-soc="${occ.soc}">
+      <div>
+        <div class="ate-dropdown-title">${esc(occ.title)}</div>
+        <div class="ate-dropdown-sub">SOC ${occ.soc} &middot; ${esc(occ.group)}</div>
+      </div>
+      <span class="ate-dropdown-group" style="color:${GROUP_COLORS[occ.group]};background:${GROUP_COLORS[occ.group]}18;">${esc(occ.group)}</span>
+    </div>`
+  ).join('');
+  dropdown.classList.add('open');
+  dropdown.querySelectorAll('.ate-dropdown-item').forEach(el => {
+    el.addEventListener('click', () => {
+      state.selected = OCCUPATIONS.find(o => o.soc === el.dataset.soc);
+      state.search = state.selected.title;
+      searchInput.value = state.selected.title;
+      clearBtn.style.display = '';
+      dropdown.classList.remove('open');
+      state.activeTab = 'score';
+      animateAndRender();
+    });
+  });
+}
+
+function animateAndRender() {
+  if (!state.selected) { renderResults(); return; }
+  const target = computeATE(state.selected.base, state.region, 2026);
+  state.animScore = 0;
+  renderResults();
+  const start = performance.now();
+  function step(ts) {
+    const progress = Math.min((ts - start) / 900, 1);
+    const ease = 1 - Math.pow(1 - progress, 3);
+    state.animScore = ease * target;
+    updateScoreNumber();
+    if (progress < 1) requestAnimationFrame(step);
+  }
+  requestAnimationFrame(step);
+}
+
+function updateScoreNumber() {
+  const el = document.getElementById('score-num');
+  const bar = document.getElementById('progress-fill');
+  if (el) el.textContent = (state.animScore * 100).toFixed(1);
+  if (bar) bar.style.width = (state.animScore * 100) + '%';
+}
+
+function renderResults() {
+  if (!state.selected) {
+    resultsEl.innerHTML = `
+      <div class="ate-empty">
+        <div class="ate-empty-icon">&#x27C1;</div>
+        <div class="ate-empty-title">Search for your occupation above</div>
+        <div class="ate-empty-sub">236 occupations &middot; 6 SOC groups &middot; 5 US regions</div>
+        <div class="ate-quick">
+          ${["Credit Analysts", "Paralegals", "Data Entry Keyers", "Registered Nurses", "Financial Analysts"]
+            .map(t => `<button class="ate-quick-btn" data-quick="${esc(t)}">${esc(t)}</button>`).join('')}
+        </div>
+      </div>
+    `;
+    resultsEl.querySelectorAll('.ate-quick-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const occ = OCCUPATIONS.find(o => o.title === btn.dataset.quick);
+        if (occ) {
+          state.selected = occ;
+          state.search = occ.title;
+          searchInput.value = occ.title;
+          clearBtn.style.display = '';
+          state.activeTab = 'score';
+          animateAndRender();
+        }
+      });
+    });
+    return;
+  }
+
+  const currentScore = computeATE(state.selected.base, state.region, 2026);
+  const risk = getRiskLevel(currentScore);
+  const sVal = sigmoid(2026, REGIONS[state.region].k, REGIONS[state.region].t0, REGIONS[state.region].L);
+
+  let html = `
+    <div class="ate-score-card" style="border:1px solid ${risk.color}30; box-shadow:0 0 40px ${risk.color}15;">
+      <div class="ate-score-head">
+        <div>
+          <div class="ate-soc">SOC ${state.selected.soc} &middot; ${esc(state.selected.group)}</div>
+          <h2 class="ate-title">${esc(state.selected.title)}</h2>
+          <div class="ate-region-label">${esc(REGIONS[state.region].label)} &middot; 2026 projection</div>
+        </div>
+        <div>
+          <div class="ate-score-num" id="score-num" style="color:${risk.color};">${(state.animScore * 100).toFixed(1)}</div>
+          <div class="ate-score-label">ATE Score (&times;100)</div>
+        </div>
+      </div>
+      <div class="ate-progress">
+        <div class="ate-progress-fill" id="progress-fill" style="background:linear-gradient(90deg, ${risk.color}88, ${risk.color}); width:${state.animScore * 100}%;"></div>
+      </div>
+      <div class="ate-risk-scale">
+        ${RISK_LEVELS.map(r => `<div class="ate-risk-seg" style="background:${r.color}; opacity:${risk.label === r.label ? 1 : 0.2};"></div>`).join('')}
+      </div>
+      <div class="ate-risk-box" style="background:${risk.color}10; border-left:3px solid ${risk.color};">
+        <div class="ate-risk-label" style="color:${risk.color};">${risk.label}</div>
+        <div class="ate-risk-desc">${risk.desc}</div>
+      </div>
+      <div class="ate-factors">
+        <div class="ate-factor">
+          <div class="ate-factor-val">${state.selected.cap.toFixed(2)}</div>
+          <div class="ate-factor-label">CAP (AI Capability)</div>
+        </div>
+        <div class="ate-factor">
+          <div class="ate-factor-val">${state.selected.cov.toFixed(2)}</div>
+          <div class="ate-factor-label">COV (Workflow Coverage)</div>
+        </div>
+        <div class="ate-factor">
+          <div class="ate-factor-val">${sVal.toFixed(3)}</div>
+          <div class="ate-factor-label">S(t) Adoption Velocity</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="ate-tabs">
+      ${['score','timeline','regions','pivot'].map(tab => {
+        const labels = {score: 'Breakdown', timeline: '2025–2030', regions: 'Regions', pivot: 'Pivot Roles'};
+        return `<button class="ate-tab ${state.activeTab === tab ? 'active' : ''}" data-tab="${tab}">${labels[tab]}</button>`;
+      }).join('')}
+    </div>
+
+    <div id="panel"></div>
+
+    <div class="ate-cite">
+      <div class="ate-cite-label">Cite this work</div>
+      <div class="ate-cite-text">Gupta, R., &amp; Kumar, S. (2026). Agentic AI and Occupational Displacement: A Multi-Regional Task Exposure Analysis of Emerging Labor Market Disruption. <em>arXiv:2604.00186</em></div>
+    </div>
+  `;
+
+  resultsEl.innerHTML = html;
+
+  resultsEl.querySelectorAll('.ate-tab').forEach(btn => {
+    btn.addEventListener('click', () => {
+      state.activeTab = btn.dataset.tab;
+      renderResults();
+    });
+  });
+
+  renderPanel(currentScore, risk);
+}
+
+function renderPanel(currentScore, risk) {
+  const panel = document.getElementById('panel');
+  const sVal = sigmoid(2026, REGIONS[state.region].k, REGIONS[state.region].t0, REGIONS[state.region].L);
+
+  if (state.activeTab === 'score') {
+    panel.innerHTML = `
+      <div class="ate-panel">
+        <div class="ate-panel-title">ATE Formula Breakdown</div>
+        <div class="ate-formula">
+          ATE = &Sigma; [ w(o,t) &times; CAP(t) &times; COV(t) ] &times; S(year, region)<br/>
+          <em>= ${state.selected.cap.toFixed(2)} &times; ${state.selected.cov.toFixed(2)} &times; ${sVal.toFixed(3)} = <strong>${currentScore.toFixed(3)}</strong></em>
+        </div>
+        <div class="ate-breakdown-desc">
+          <strong>CAP</strong> &mdash; AI capability score derived from benchmark literature and practitioner deployment reports for tasks in this occupation.<br/>
+          <strong>COV</strong> &mdash; Workflow coverage factor: fraction of this occupation's standard workflow executable end-to-end by current agentic AI without human handoff.<br/>
+          <strong>S(t)</strong> &mdash; Logistic S-curve adoption velocity calibrated to regional enterprise AI adoption rates.<br/><br/>
+          <span class="ate-source">Source: Gupta &amp; Kumar (2026), "Agentic AI and Occupational Displacement," arxiv:2604.00186</span>
+        </div>
+      </div>
+    `;
+  } else if (state.activeTab === 'timeline') {
+    const years = [2025, 2026, 2027, 2028, 2029, 2030];
+    const data = years.map(y => ({ year: y, score: computeATE(state.selected.base, state.region, y) }));
+    panel.innerHTML = `
+      <div class="ate-panel">
+        <div class="ate-panel-title">ATE Score Trajectory &middot; ${esc(REGIONS[state.region].label)}</div>
+        <div class="ate-timeline">
+          ${data.map(d => {
+            const r = getRiskLevel(d.score);
+            const h = Math.max(8, d.score * 280);
+            return `
+              <div class="ate-bar-col">
+                ${d.year === 2026 ? '<div class="ate-bar-now-tag">NOW</div>' : ''}
+                <div class="ate-bar-score" style="color:${r.color};">${(d.score * 100).toFixed(1)}</div>
+                <div class="ate-bar ${d.year === 2026 ? 'now' : ''}" style="height:${h}px; background:linear-gradient(180deg, ${r.color}, ${r.color}55); ${d.year === 2026 ? 'border:1px solid ' + r.color + '80;' : ''}"></div>
+                <div class="ate-year">${d.year}</div>
+              </div>
+            `;
+          }).join('')}
+        </div>
+        <div class="ate-timeline-footer">
+          S-curve parameters: k=${REGIONS[state.region].k}, t<sub>0</sub>=${REGIONS[state.region].t0}, L=${REGIONS[state.region].L} &middot;
+          Moderate-risk threshold: ATE &ge; 0.35
+        </div>
+      </div>
+    `;
+  } else if (state.activeTab === 'regions') {
+    const data = Object.entries(REGIONS).map(([key, val]) => ({
+      key, label: val.label,
+      score: computeATE(state.selected.base, key, 2026)
+    })).sort((a, b) => b.score - a.score);
+    const maxVal = Math.max(...data.map(r => r.score));
+    panel.innerHTML = `
+      <div class="ate-panel">
+        <div class="ate-panel-title">Regional Comparison &middot; 2026</div>
+        ${data.map(r => {
+          const rl = getRiskLevel(r.score);
+          return `
+            <div class="ate-region-row">
+              <div class="ate-region-row-head">
+                <div class="ate-region-name" style="color:${r.key === state.region ? '#e8e0d0' : '#6a6050'};">${esc(r.label)}</div>
+                <div class="ate-region-score" style="color:${rl.color};">${(r.score * 100).toFixed(1)}</div>
+              </div>
+              <div class="ate-region-bar">
+                <div class="ate-region-bar-fill" style="width:${(r.score / maxVal) * 100}%; background:${r.key === state.region ? rl.color : rl.color + '55'};"></div>
+              </div>
+            </div>
+          `;
+        }).join('')}
+      </div>
+    `;
+  } else if (state.activeTab === 'pivot') {
+    panel.innerHTML = `
+      <div class="ate-panel">
+        <div class="ate-panel-title">Reinstatement Roles</div>
+        <div class="ate-pivot-intro">
+          Emerging occupational categories identified in the paper where agentic AI deployment creates new demand for human roles.
+          Your current ATE: <span style="color:${risk.color};">${(currentScore * 100).toFixed(1)}</span>
+        </div>
+        ${REINSTATEMENT_ROLES.map(role => `
+          <div class="ate-pivot-row">
+            <div>
+              <div class="ate-pivot-title">${esc(role.title)}</div>
+              <div class="ate-pivot-desc">${esc(role.description)}</div>
+            </div>
+            <div>
+              <div class="ate-pivot-score">${(role.ate * 100).toFixed(0)}</div>
+              <div class="ate-pivot-score-label">ATE score</div>
+            </div>
+          </div>
+        `).join('')}
+        <div class="ate-pivot-footer">
+          &uarr; These roles have low ATE scores because agentic AI deployment creates, rather than eliminates, demand for human oversight, governance, and collaboration at scale.
+        </div>
+      </div>
+    `;
+  }
+}
+
+// ── Event listeners ───────────────────────────────────────────────────────
+searchInput.addEventListener('input', e => {
+  state.search = e.target.value;
+  clearBtn.style.display = state.search ? '' : 'none';
+  renderDropdown();
+});
+searchInput.addEventListener('focus', () => renderDropdown());
+clearBtn.addEventListener('click', () => {
+  state.search = '';
+  state.selected = null;
+  searchInput.value = '';
+  clearBtn.style.display = 'none';
+  dropdown.classList.remove('open');
+  renderResults();
+});
+document.addEventListener('mousedown', e => {
+  if (!searchWrap.contains(e.target)) dropdown.classList.remove('open');
+});
+
+// Initial render
+renderRegions();
+renderResults();
+</script>
+</body>
+</html>
