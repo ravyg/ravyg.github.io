@@ -65,6 +65,7 @@
     .ate-search-icon { padding: 0 16px; color: #555; font-size: 18px; }
     .ate-search-input { flex: 1; background: transparent; border: none; outline: none; color: #e8e0d0; font-size: 15px; padding: 16px 0; }
     .ate-search-input::placeholder { color: #444; }
+    .ate-search-hint { font-size: 11px; color: #5a5040; margin-top: 8px; padding: 0 4px; font-family: monospace; letter-spacing: 0.04em; }
     .ate-clear-btn { background: none; border: none; color: #555; font-size: 18px; padding: 0 16px; cursor: pointer; }
     .ate-dropdown { position: absolute; top: 100%; left: 0; right: 0; z-index: 100; background: #13131f; border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; margin-top: 4px; box-shadow: 0 16px 48px rgba(0,0,0,0.6); overflow: hidden; display: none; }
     .ate-dropdown.open { display: block; }
@@ -228,10 +229,11 @@
   <div class="ate-search-wrap" id="search-wrap">
     <div class="ate-search-box">
       <span class="ate-search-icon">&#x2315;</span>
-      <input class="ate-search-input" id="search-input" placeholder="Search occupation title, group, or SOC code..." />
+      <input class="ate-search-input" id="search-input" placeholder="Type at least 2 characters (e.g. credit, 13-20, nurse)..." />
       <button class="ate-clear-btn" id="clear-btn" style="display:none;">&times;</button>
     </div>
     <div class="ate-dropdown" id="dropdown"></div>
+    <div class="ate-search-hint">Start typing 2 or more characters to see matching occupations &middot; 236 occupations indexed</div>
   </div>
 
   <!-- Regions -->
