@@ -94,7 +94,7 @@
     .award-card h3 { font-size: 0.92rem; }
     .award-card p { font-size: 0.83rem; color: var(--mid); margin-top: 0.3rem; }
 
-    /* OPEN SOURCE */
+    /* BEYOND WORK */
     .contrib-list { display: flex; flex-direction: column; gap: 0.75rem; }
     .contrib-item { background: white; border: 1px solid var(--border); border-radius: 8px; padding: 1rem 1.2rem; display: flex; gap: 1rem; align-items: flex-start; }
     .contrib-item .label { background: var(--dark); color: white; font-size: 0.72rem; font-weight: 700; padding: 2px 8px; border-radius: 4px; white-space: nowrap; margin-top: 2px; }
@@ -107,6 +107,51 @@
     .contact-item:hover { border-color: var(--accent); color: var(--accent); }
     .contact-item .ci-label { font-size: 0.72rem; color: var(--mid); display: block; }
 
+    /* GITHUB CONTRIBUTIONS */
+    .gh-project { background: white; border: 1px solid var(--border); border-radius: 10px; margin-bottom: 0.75rem; overflow: hidden; }
+    .gh-project-header { display: flex; align-items: center; justify-content: space-between; padding: 0.9rem 1.2rem; cursor: pointer; user-select: none; }
+    .gh-project-header:hover { background: var(--light); }
+    .gh-project-name { font-size: 0.92rem; font-weight: 700; display: flex; align-items: center; gap: 0.6rem; }
+    .gh-project-name a { color: var(--accent); text-decoration: none; }
+    .gh-project-name a:hover { text-decoration: underline; }
+    .gh-repo-stats { font-size: 0.78rem; display: flex; gap: 0.6rem; align-items: center; }
+    .gh-stat-stars { color: #ca8a04; }
+    .gh-stat-forks { color: var(--mid); }
+    .gh-project-right { display: flex; align-items: center; gap: 0.6rem; }
+    .gh-pr-count { font-size: 0.75rem; font-weight: 600; padding: 2px 8px; border-radius: 4px; }
+    .gh-pr-count.merged { background: #f3e8ff; color: #7c3aed; }
+    .gh-pr-count.open { background: #dcfce7; color: #15803d; }
+    .gh-chevron { font-size: 0.7rem; color: var(--mid); transition: transform 0.2s; }
+    .gh-project.open .gh-chevron { transform: rotate(90deg); }
+    .gh-pr-list { display: none; border-top: 1px solid var(--border); }
+    .gh-project.open .gh-pr-list { display: block; }
+    .gh-pr-row { display: flex; align-items: baseline; gap: 0.6rem; padding: 0.55rem 1.2rem 0.55rem 2rem; font-size: 0.83rem; border-bottom: 1px solid var(--border); }
+    .gh-pr-row:last-child { border-bottom: none; }
+    .gh-pr-row a { color: var(--dark); text-decoration: none; flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .gh-pr-row a:hover { color: var(--accent); }
+    .gh-pr-num { color: var(--mid); font-size: 0.78rem; flex-shrink: 0; }
+    .gh-pr-num a { color: var(--mid) !important; flex: none !important; }
+    .gh-pr-num a:hover { color: var(--accent) !important; }
+    .gh-pr-date { color: var(--mid); font-size: 0.75rem; flex-shrink: 0; }
+    .gh-pr-status { font-size: 0.7rem; font-weight: 600; padding: 1px 6px; border-radius: 3px; flex-shrink: 0; }
+    .gh-pr-status.merged { background: #f3e8ff; color: #7c3aed; }
+    .gh-pr-status.open { background: #dcfce7; color: #15803d; }
+    .gh-loading { text-align: center; color: var(--mid); font-size: 0.9rem; padding: 2rem 0; }
+    .gh-error { text-align: center; color: var(--mid); font-size: 0.88rem; padding: 1.5rem 0; }
+    .gh-error a { color: var(--accent); text-decoration: none; }
+    .gh-error a:hover { text-decoration: underline; }
+
+    /* MY PROJECTS */
+    .gh-my-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 1rem; }
+    .gh-my-card { background: white; border: 1px solid var(--border); border-radius: 10px; padding: 1.2rem; display: flex; flex-direction: column; }
+    .gh-my-card h3 { font-size: 0.92rem; margin-bottom: 0.3rem; }
+    .gh-my-card h3 a { color: var(--accent); text-decoration: none; }
+    .gh-my-card h3 a:hover { text-decoration: underline; }
+    .gh-my-card .gh-my-desc { font-size: 0.83rem; color: var(--mid); flex: 1; margin-bottom: 0.8rem; }
+    .gh-my-meta { display: flex; gap: 0.8rem; font-size: 0.78rem; color: var(--mid); align-items: center; }
+    .gh-my-meta .gh-stat-stars { color: #ca8a04; }
+    .gh-lang-dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
+
     footer { text-align: center; padding: 2rem; font-size: 0.8rem; color: var(--mid); border-top: 1px solid var(--border); }
   </style>
 </head>
@@ -118,7 +163,8 @@
     <a href="#featured">Featured</a>
     <a href="#research">Research</a>
     <a href="#recognition">Recognition</a>
-    <a href="#open-source">Open Source</a>
+    <a href="#github">Contributions</a>
+    <a href="#my-projects">Projects</a>
     <a href="#contact">Contact</a>
   </div>
 </nav>
@@ -282,26 +328,20 @@
   </div>
 </section>
 
-<!-- OPEN SOURCE -->
-<section id="open-source">
-  <h2>Open Standards &amp; Open Source</h2>
-  <div class="contrib-list">
-    <div class="contrib-item">
-      <span class="label">CONTRIBUTOR</span>
-      <div class="text">
-        <h3>AP2 — Agent Payment Protocol (Google / google-agentic-commerce)</h3>
-        <p>PR #165 — B2B agent governance framework for multi-round AI-mediated commerce negotiations.
-           Protocol adopted by 60+ Fortune 500 partners. Apache 2.0.</p>
-      </div>
-    </div>
-    <div class="contrib-item">
-      <span class="label">IMPLEMENTER</span>
-      <div class="text">
-        <h3>Model Context Protocol (MCP) — Anthropic</h3>
-        <p>First-mover enterprise MCP implementation across BigCommerce, Feedonomics, and Makeswift —
-           defining the foundational agent communication layer for production commerce AI.</p>
-      </div>
-    </div>
+
+<!-- GITHUB CONTRIBUTIONS -->
+<section id="github">
+  <h2>Open Source Contributions</h2>
+  <div id="gh-prs">
+    <div class="gh-loading">Loading contributions...</div>
+  </div>
+</section>
+
+<!-- MY PROJECTS -->
+<section id="my-projects">
+  <h2>My Projects</h2>
+  <div class="gh-my-grid" id="gh-my-repos">
+    <div class="gh-loading">Loading projects...</div>
   </div>
 </section>
 
@@ -360,5 +400,141 @@
   © 2026 Ravish Gupta &nbsp;·&nbsp; Seattle, WA &nbsp;·&nbsp; IEEE Senior Member #93067107
 </footer>
 
+<script>
+(function() {
+  var USER = 'ravyg';
+  var MAX_PRS = 30;
+  var MAX_REPOS = 6;
+  var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  var LANG_COLORS = {
+    JavaScript: '#f1e05a', Python: '#3572A5', TypeScript: '#3178c6',
+    HTML: '#e34c26', CSS: '#563d7c', Java: '#b07219', Go: '#00ADD8',
+    Rust: '#dea584', Shell: '#89e051', Ruby: '#701516', 'C++': '#f34b7d',
+    C: '#555555', 'Jupyter Notebook': '#DA5B0B'
+  };
+
+  function fmt(iso) {
+    var d = new Date(iso);
+    return months[d.getMonth()] + ' ' + d.getDate() + ', ' + d.getFullYear();
+  }
+  function esc(str) {
+    var div = document.createElement('div');
+    div.appendChild(document.createTextNode(str));
+    return div.innerHTML;
+  }
+  function sanitizeId(repo) { return repo.replace(/[^a-zA-Z0-9]/g, '-'); }
+
+  // ─── Open Source Contributions ───
+  var contribEl = document.getElementById('gh-prs');
+
+  // Fetch merged + open PRs in parallel
+  Promise.all([
+    fetch('https://api.github.com/search/issues?q=author:' + USER + '+type:pr+is:merged+-user:' + USER + '&sort=created&order=desc&per_page=' + MAX_PRS).then(function(r) { return r.ok ? r.json() : {items:[]}; }),
+    fetch('https://api.github.com/search/issues?q=author:' + USER + '+type:pr+is:open+-user:' + USER + '&sort=created&order=desc&per_page=' + MAX_PRS).then(function(r) { return r.ok ? r.json() : {items:[]}; })
+  ]).then(function(results) {
+    var merged = (results[0].items || []).map(function(pr) { pr._status = 'merged'; return pr; });
+    var open = (results[1].items || []).map(function(pr) { pr._status = 'open'; return pr; });
+    var all = merged.concat(open);
+
+    if (!all.length) {
+      contribEl.innerHTML = '<div class="gh-error">No contributions found. <a href="https://github.com/' + USER + '" target="_blank">View GitHub profile &rarr;</a></div>';
+      return;
+    }
+
+    // Group by repo
+    var grouped = {}, order = [];
+    all.forEach(function(pr) {
+      var p = pr.html_url.split('/');
+      var repo = p[3] + '/' + p[4];
+      if (!grouped[repo]) { grouped[repo] = []; order.push(repo); }
+      grouped[repo].push(pr);
+    });
+
+    contribEl.innerHTML = order.map(function(repo) {
+      var prs = grouped[repo];
+      var repoUrl = 'https://github.com/' + repo;
+      var mergedCount = prs.filter(function(p) { return p._status === 'merged'; }).length;
+      var openCount = prs.filter(function(p) { return p._status === 'open'; }).length;
+
+      var badges = '';
+      if (mergedCount) badges += '<span class="gh-pr-count merged">' + mergedCount + ' merged</span>';
+      if (openCount) badges += '<span class="gh-pr-count open">' + openCount + ' open</span>';
+
+      var rows = prs.map(function(pr) {
+        var date = pr._status === 'merged'
+          ? (pr.pull_request && pr.pull_request.merged_at ? fmt(pr.pull_request.merged_at) : fmt(pr.closed_at))
+          : fmt(pr.created_at);
+        return '<div class="gh-pr-row">' +
+          '<span class="gh-pr-status ' + pr._status + '">' + (pr._status === 'merged' ? 'Merged' : 'Open') + '</span>' +
+          '<span class="gh-pr-num"><a href="' + pr.html_url + '" target="_blank">#' + pr.number + '</a></span>' +
+          '<a href="' + pr.html_url + '" target="_blank">' + esc(pr.title) + '</a>' +
+          '<span class="gh-pr-date">' + date + '</span>' +
+        '</div>';
+      }).join('');
+
+      return '<div class="gh-project">' +
+        '<div class="gh-project-header" onclick="this.parentElement.classList.toggle(\'open\')">' +
+          '<span class="gh-project-name">' +
+            '<a href="' + repoUrl + '" target="_blank" onclick="event.stopPropagation()">' + esc(repo) + '</a>' +
+            '<span class="gh-repo-stats" id="gh-stats-' + sanitizeId(repo) + '"></span>' +
+          '</span>' +
+          '<div class="gh-project-right">' + badges +
+            '<span class="gh-chevron">&#9654;</span>' +
+          '</div>' +
+        '</div>' +
+        '<div class="gh-pr-list">' + rows + '</div>' +
+      '</div>';
+    }).join('');
+
+    // Fetch stars/forks per repo
+    order.forEach(function(repo) {
+      fetch('https://api.github.com/repos/' + repo)
+        .then(function(r) { return r.ok ? r.json() : null; })
+        .then(function(d) {
+          if (!d) return;
+          var el = document.getElementById('gh-stats-' + sanitizeId(repo));
+          if (!el) return;
+          var h = '';
+          if (d.stargazers_count > 0) h += '<span class="gh-stat-stars">&#9733; ' + d.stargazers_count.toLocaleString() + '</span>';
+          if (d.forks_count > 0) h += '<span class="gh-stat-forks">&#9741; ' + d.forks_count.toLocaleString() + '</span>';
+          el.innerHTML = h;
+        }).catch(function() {});
+    });
+  }).catch(function() {
+    contribEl.innerHTML = '<div class="gh-error">Couldn\'t load contributions right now. <a href="https://github.com/' + USER + '" target="_blank">View GitHub profile &rarr;</a></div>';
+  });
+
+  // ─── My Projects ───
+  var myEl = document.getElementById('gh-my-repos');
+
+  fetch('https://api.github.com/users/' + USER + '/repos?sort=updated&per_page=100&type=owner')
+    .then(function(r) {
+      if (!r.ok) throw new Error(r.status);
+      return r.json();
+    })
+    .then(function(allRepos) {
+      var repos = allRepos.filter(function(r) { return !r.fork; }).slice(0, MAX_REPOS);
+      if (!repos.length) {
+        myEl.innerHTML = '<div class="gh-error">No public repositories found. <a href="https://github.com/' + USER + '" target="_blank">View GitHub profile &rarr;</a></div>';
+        return;
+      }
+      myEl.innerHTML = repos.map(function(r) {
+        var desc = r.description ? r.description : 'No description';
+        if (desc.length > 120) desc = desc.substring(0, 117) + '...';
+        var lang = r.language ? '<span><span class="gh-lang-dot" style="background:' + (LANG_COLORS[r.language] || '#999') + '"></span> ' + r.language + '</span>' : '';
+        var stars = r.stargazers_count > 0 ? '<span class="gh-stat-stars">&#9733; ' + r.stargazers_count + '</span>' : '';
+        var forks = r.forks_count > 0 ? '<span>&#9741; ' + r.forks_count + '</span>' : '';
+        return '<div class="gh-my-card">' +
+          '<h3><a href="' + r.html_url + '" target="_blank">' + esc(r.name) + '</a></h3>' +
+          '<div class="gh-my-desc">' + esc(desc) + '</div>' +
+          '<div class="gh-my-meta">' + lang + stars + forks + '<span>Updated ' + fmt(r.pushed_at) + '</span></div>' +
+        '</div>';
+      }).join('');
+    })
+    .catch(function() {
+      myEl.innerHTML = '<div class="gh-error">Couldn\'t load projects right now. <a href="https://github.com/' + USER + '" target="_blank">View GitHub profile &rarr;</a></div>';
+    });
+})();
+</script>
 </body>
 </html>
