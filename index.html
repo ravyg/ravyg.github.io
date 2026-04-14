@@ -25,10 +25,15 @@
     body { font-family: 'Segoe UI', system-ui, sans-serif; color: var(--dark); background: var(--light); line-height: 1.6; }
 
     /* NAV */
-    nav { position: sticky; top: 0; background: white; border-bottom: 1px solid var(--border); padding: 0 2rem; z-index: 100; display: flex; justify-content: space-between; align-items: center; height: 56px; }
-    nav .logo { font-weight: 700; font-size: 1rem; color: var(--dark); }
-    nav .links a { margin-left: 1.5rem; text-decoration: none; color: var(--mid); font-size: 0.9rem; }
+    nav { position: sticky; top: 0; background: white; border-bottom: 1px solid var(--border); padding: 0 2rem; z-index: 100; display: flex; justify-content: space-between; align-items: center; min-height: 56px; }
+    nav .logo { font-weight: 700; font-size: 1rem; color: var(--dark); flex-shrink: 0; }
+    nav .links { display: flex; flex-wrap: wrap; gap: 0.3rem 0; justify-content: flex-end; }
+    nav .links a { margin-left: 1.5rem; text-decoration: none; color: var(--mid); font-size: 0.9rem; white-space: nowrap; }
     nav .links a:hover { color: var(--accent); }
+    @media (max-width: 600px) {
+      nav { padding: 0.5rem 1rem; }
+      nav .links a { margin-left: 0; margin-right: 1rem; font-size: 0.82rem; }
+    }
 
     /* HERO */
     .hero { max-width: 860px; margin: 0 auto; padding: 5rem 2rem 4rem; }
@@ -36,7 +41,8 @@
     .hero h1 { font-size: clamp(2rem, 5vw, 3rem); font-weight: 800; line-height: 1.15; margin-bottom: 1rem; }
     .hero p { font-size: 1.1rem; color: var(--mid); max-width: 600px; margin-bottom: 2rem; }
     .badges { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 2rem; }
-    .badge { background: white; border: 1px solid var(--border); border-radius: 6px; padding: 5px 12px; font-size: 0.82rem; color: var(--mid); display: flex; align-items: center; gap: 6px; }
+    .badge { background: white; border: 1px solid var(--border); border-radius: 6px; padding: 5px 12px; font-size: 0.82rem; color: var(--mid); display: flex; align-items: center; gap: 6px; text-decoration: none; transition: border-color 0.15s; }
+    .badge:hover { border-color: var(--accent); }
     .badge strong { color: var(--dark); }
     .cta-row { display: flex; flex-wrap: wrap; gap: 0.75rem; }
     .btn { padding: 0.6rem 1.4rem; border-radius: 8px; font-size: 0.9rem; font-weight: 600; text-decoration: none; transition: opacity 0.15s; }
@@ -177,11 +183,11 @@
      AI architecture across Commerce (BigCommerce, Feedonomics, and Makeswift).
      8+ years at Amazon Web Services. Contributor to emerging agentic AI standards.</p>
   <div class="badges">
-    <div class="badge"><strong>IEEE</strong> Senior Member #93067107</div>
-    <div class="badge"><strong>DBLP</strong> pid 208/3317</div>
-    <div class="badge"><strong>ORCID</strong> 0009-0008-9247-9579</div>
+    <a class="badge" href="https://ieee.org" target="_blank"><strong>IEEE</strong> Senior Member #93067107</a>
+    <a class="badge" href="https://dblp.org/pid/208/3317.html" target="_blank"><strong>DBLP</strong> pid 208/3317</a>
+    <a class="badge" href="https://orcid.org/0009-0008-9247-9579" target="_blank"><strong>ORCID</strong> 0009-0008-9247-9579</a>
     <div class="badge"><strong>M.S.</strong> Purdue University</div>
-    <div class="badge"><strong>Reviewer</strong> WCCI 2026 IJCNN</div>
+    <a class="badge" href="https://2026.ieee-wcci.org/" target="_blank"><strong>Reviewer</strong> WCCI 2026 IJCNN</a>
   </div>
   <div class="cta-row">
     <a class="btn btn-primary" href="https://linkedin.com/in/ravishgupta" target="_blank">LinkedIn</a>
@@ -388,10 +394,6 @@
     <a class="contact-item" href="https://orcid.org/0009-0008-9247-9579" target="_blank">
       <span>🔬</span>
       <div><strong>ORCID</strong><span class="ci-label">0009-0008-9247-9579</span></div>
-    </a>
-    <a class="contact-item" href="mailto:ravishgupta@ieee.org">
-      <span>✉️</span>
-      <div><strong>Email</strong><span class="ci-label">ravishgupta@ieee.org</span></div>
     </a>
   </div>
 </section>
