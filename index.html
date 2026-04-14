@@ -147,6 +147,11 @@
     .btn-featured-ate .ate-spark { display: inline-flex; align-items: center; justify-content: center; width: 22px; height: 22px; border-radius: 50%; background: rgba(255,140,66,0.15); font-size: 0.75rem; }
     .featured-status { margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid rgba(255,255,255,0.2); font-size: 0.85rem; color: rgba(255,255,255,0.88); }
     .featured-status strong { color: white; }
+    .featured-media { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1rem; margin-top: 1.5rem; }
+    .featured-media figure { margin: 0; background: rgba(0,0,0,0.25); border: 1px solid rgba(255,255,255,0.2); border-radius: 12px; overflow: hidden; }
+    .featured-media figcaption { color: white; font-size: 0.82rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; padding: 0.7rem 1rem; background: rgba(255,255,255,0.08); }
+    .featured-media .media-audio { height: 80px; width: 100%; border: 0; display: block; }
+    .featured-media .media-video { aspect-ratio: 16/9; width: 100%; border: 0; display: block; }
 
     /* RECOGNITION */
     .awards-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1rem; }
@@ -275,6 +280,13 @@
     <a class="btn-featured-primary" href="https://arxiv.org/abs/2604.00186" target="_blank">Read Paper on arXiv →</a>
     <a class="btn-featured-secondary" href="https://arxiv.org/pdf/2604.00186" target="_blank">Download PDF</a>
     <a class="btn-featured-ate" href="ate-calculator.html"><span class="ate-spark">⚡</span>Calculate Your ATE Score →</a>
+  </div>
+
+  <div class="featured-media">
+    <figure>
+      <figcaption>🎬 Video Walkthrough</figcaption>
+      <iframe class="media-video" src="https://drive.google.com/file/d/1B0Mz8VXrlUWoT3Ex1MuI1kqsWxFTKBbZ/preview" allow="autoplay" allowfullscreen></iframe>
+    </figure>
   </div>
 
   <div class="featured-status">
