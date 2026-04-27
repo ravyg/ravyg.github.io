@@ -480,7 +480,7 @@
 <script>
 (function() {
   var USER = 'ravyg';
-  var MAX_PRS = 30;
+  var MAX_PRS = 100;
   var MAX_REPOS = 6;
   var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
   var LANG_COLORS = {
@@ -522,16 +522,16 @@
   // ─── Open Source Contributions ───
   var contribEl = document.getElementById('gh-prs');
 
-  // Fetch merged, open, and closed PRs in parallel
-  Promise.all([
-    cachedFetch('https://api.github.com/search/issues?q=author:' + USER + '+type:pr+is:merged+-user:' + USER + '&sort=created&order=desc&per_page=' + MAX_PRS, 'gh_prs_merged').catch(function() { return {items:[]}; }),
-    cachedFetch('https://api.github.com/search/issues?q=author:' + USER + '+type:pr+is:open+-user:' + USER + '&sort=created&order=desc&per_page=' + MAX_PRS, 'gh_prs_open').catch(function() { return {items:[]}; }),
-    cachedFetch('https://api.github.com/search/issues?q=author:' + USER + '+type:pr+is:unmerged+is:closed+-user:' + USER + '&sort=created&order=desc&per_page=' + MAX_PRS, 'gh_prs_closed').catch(function() { return {items:[]}; })
-  ]).then(function(results) {
-    var merged = (results[0].items || []).map(function(pr) { pr._status = 'merged'; return pr; });
-    var open = (results[1].items || []).map(function(pr) { pr._status = 'open'; return pr; });
-    var closed = (results[2].items || []).map(function(pr) { pr._status = 'closed'; return pr; });
-    var all = merged.concat(open).concat(closed);
+  // Fetch all external PRs in one query, determine status from merged_at field
+  cachedFetch('https://api.github.com/search/issues?q=author:' + USER + '+type:pr+-user:' + USER + '&sort=created&order=desc&per_page=' + MAX_PRS, 'gh_prs_all_v2')
+  .catch(function() { return {items:[]}; })
+  .then(function(data) {
+    var all = (data.items || []).map(function(pr) {
+      if (pr.pull_request && pr.pull_request.merged_at) pr._status = 'merged';
+      else if (pr.state === 'open') pr._status = 'open';
+      else pr._status = 'closed';
+      return pr;
+    });
 
     if (!all.length) {
       contribEl.innerHTML = '<div class="gh-error">No contributions found. <a href="https://github.com/' + USER + '" target="_blank">View GitHub profile &rarr;</a></div>';
