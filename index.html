@@ -188,6 +188,7 @@
     .gh-pr-count { font-size: 0.75rem; font-weight: 600; padding: 2px 8px; border-radius: 4px; }
     .gh-pr-count.merged { background: #f3e8ff; color: #7c3aed; }
     .gh-pr-count.open { background: #dcfce7; color: #15803d; }
+    .gh-pr-count.closed { background: #fee2e2; color: #dc2626; }
     .gh-chevron { font-size: 0.7rem; color: var(--mid); transition: transform 0.2s; }
     .gh-project.open .gh-chevron { transform: rotate(90deg); }
     .gh-pr-list { display: none; border-top: 1px solid var(--border); }
@@ -203,6 +204,7 @@
     .gh-pr-status { font-size: 0.7rem; font-weight: 600; padding: 1px 6px; border-radius: 3px; flex-shrink: 0; }
     .gh-pr-status.merged { background: #f3e8ff; color: #7c3aed; }
     .gh-pr-status.open { background: #dcfce7; color: #15803d; }
+    .gh-pr-status.closed { background: #fee2e2; color: #dc2626; }
     .gh-loading { text-align: center; color: var(--mid); font-size: 0.9rem; padding: 2rem 0; }
     .gh-error { text-align: center; color: var(--mid); font-size: 0.88rem; padding: 1.5rem 0; }
     .gh-error a { color: var(--accent); text-decoration: none; }
@@ -520,14 +522,16 @@
   // ─── Open Source Contributions ───
   var contribEl = document.getElementById('gh-prs');
 
-  // Fetch merged + open PRs in parallel
+  // Fetch merged, open, and closed PRs in parallel
   Promise.all([
     cachedFetch('https://api.github.com/search/issues?q=author:' + USER + '+type:pr+is:merged+-user:' + USER + '&sort=created&order=desc&per_page=' + MAX_PRS, 'gh_prs_merged').catch(function() { return {items:[]}; }),
-    cachedFetch('https://api.github.com/search/issues?q=author:' + USER + '+type:pr+is:open+-user:' + USER + '&sort=created&order=desc&per_page=' + MAX_PRS, 'gh_prs_open').catch(function() { return {items:[]}; })
+    cachedFetch('https://api.github.com/search/issues?q=author:' + USER + '+type:pr+is:open+-user:' + USER + '&sort=created&order=desc&per_page=' + MAX_PRS, 'gh_prs_open').catch(function() { return {items:[]}; }),
+    cachedFetch('https://api.github.com/search/issues?q=author:' + USER + '+type:pr+is:unmerged+is:closed+-user:' + USER + '&sort=created&order=desc&per_page=' + MAX_PRS, 'gh_prs_closed').catch(function() { return {items:[]}; })
   ]).then(function(results) {
     var merged = (results[0].items || []).map(function(pr) { pr._status = 'merged'; return pr; });
     var open = (results[1].items || []).map(function(pr) { pr._status = 'open'; return pr; });
-    var all = merged.concat(open);
+    var closed = (results[2].items || []).map(function(pr) { pr._status = 'closed'; return pr; });
+    var all = merged.concat(open).concat(closed);
 
     if (!all.length) {
       contribEl.innerHTML = '<div class="gh-error">No contributions found. <a href="https://github.com/' + USER + '" target="_blank">View GitHub profile &rarr;</a></div>';
@@ -548,17 +552,19 @@
       var repoUrl = 'https://github.com/' + repo;
       var mergedCount = prs.filter(function(p) { return p._status === 'merged'; }).length;
       var openCount = prs.filter(function(p) { return p._status === 'open'; }).length;
+      var closedCount = prs.filter(function(p) { return p._status === 'closed'; }).length;
 
       var badges = '';
       if (mergedCount) badges += '<span class="gh-pr-count merged">' + mergedCount + ' merged</span>';
       if (openCount) badges += '<span class="gh-pr-count open">' + openCount + ' open</span>';
+      if (closedCount) badges += '<span class="gh-pr-count closed">' + closedCount + ' closed</span>';
 
       var rows = prs.map(function(pr) {
-        var date = pr._status === 'merged'
-          ? (pr.pull_request && pr.pull_request.merged_at ? fmt(pr.pull_request.merged_at) : fmt(pr.closed_at))
-          : fmt(pr.created_at);
+        var date = pr._status === 'open'
+          ? fmt(pr.created_at)
+          : (pr.pull_request && pr.pull_request.merged_at ? fmt(pr.pull_request.merged_at) : fmt(pr.closed_at || pr.created_at));
         return '<div class="gh-pr-row">' +
-          '<span class="gh-pr-status ' + pr._status + '">' + (pr._status === 'merged' ? 'Merged' : 'Open') + '</span>' +
+          '<span class="gh-pr-status ' + pr._status + '">' + (pr._status === 'merged' ? 'Merged' : pr._status === 'open' ? 'Open' : 'Closed') + '</span>' +
           '<span class="gh-pr-num"><a href="' + pr.html_url + '" target="_blank">#' + pr.number + '</a></span>' +
           '<a href="' + pr.html_url + '" target="_blank">' + esc(pr.title) + '</a>' +
           '<span class="gh-pr-date">' + date + '</span>' +
