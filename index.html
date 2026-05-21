@@ -222,6 +222,17 @@
     .gh-lang-dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
 
     footer { text-align: center; padding: 2rem; font-size: 0.8rem; color: var(--mid); border-top: 1px solid var(--border); }
+
+    .creative-banner { position: relative; overflow: hidden; background: #0c0c0c; padding: 4rem 2rem; text-align: center; cursor: pointer; text-decoration: none; display: block; transition: background 0.3s; }
+    .creative-banner:hover { background: #111; }
+    .creative-banner::before { content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: radial-gradient(ellipse at 50% 50%, rgba(201,164,97,0.08) 0%, transparent 70%); pointer-events: none; }
+    .creative-banner .cb-eyebrow { font-size: 0.7rem; font-weight: 400; letter-spacing: 0.2em; text-transform: uppercase; color: #c9a461; margin-bottom: 1rem; }
+    .creative-banner h2 { font-family: 'Georgia', serif; font-size: clamp(1.6rem, 4vw, 2.4rem); font-weight: 300; color: #e0e0e0; letter-spacing: 0.02em; line-height: 1.2; margin-bottom: 0.8rem; }
+    .creative-banner h2 em { font-style: italic; color: #c9a461; }
+    .creative-banner .cb-hint { font-size: 0.82rem; color: #6a6a6a; font-weight: 300; transition: color 0.3s; }
+    .creative-banner:hover .cb-hint { color: #c9a461; }
+    .creative-banner .cb-arrow { display: inline-block; transition: transform 0.3s; }
+    .creative-banner:hover .cb-arrow { transform: translateX(6px); }
   </style>
   <!-- Cloudflare Web Analytics -->
   <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "ebda8eb66fdf497a91f2a69147762a82"}'></script>
@@ -472,6 +483,12 @@
     </a>
   </div>
 </section>
+
+<a class="creative-banner" href="gallery.html">
+  <div class="cb-eyebrow">Beyond the Code</div>
+  <h2>Visit the <em>Creative Portal</em></h2>
+  <div class="cb-hint">Paintings, art, and the quieter side of thinking <span class="cb-arrow">&rarr;</span></div>
+</a>
 
 <footer>
   © 2026 Ravish Gupta &nbsp;·&nbsp; Seattle, WA &nbsp;·&nbsp; IEEE Senior Member #93067107

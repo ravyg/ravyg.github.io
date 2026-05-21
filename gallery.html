@@ -99,6 +99,15 @@
 
     /* FOOTER */
     footer { text-align: center; padding: 3rem 2rem; font-size: 0.72rem; color: var(--text-dim); letter-spacing: 0.06em; border-top: 1px solid var(--border); font-weight: 300; }
+
+    .profile-banner { position: relative; overflow: hidden; background: linear-gradient(135deg, #1e3a5f 0%, #1a1a2e 100%); padding: 3.5rem 2rem; text-align: center; cursor: pointer; text-decoration: none; display: block; transition: filter 0.3s; }
+    .profile-banner:hover { filter: brightness(1.1); }
+    .profile-banner .pb-eyebrow { font-size: 0.68rem; font-weight: 400; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(255,255,255,0.5); margin-bottom: 0.8rem; }
+    .profile-banner h2 { font-family: var(--sans); font-size: clamp(1.4rem, 3.5vw, 2rem); font-weight: 200; color: #fff; letter-spacing: -0.01em; margin-bottom: 0.6rem; }
+    .profile-banner .pb-hint { font-size: 0.8rem; color: rgba(255,255,255,0.45); font-weight: 300; transition: color 0.3s; }
+    .profile-banner:hover .pb-hint { color: rgba(255,255,255,0.7); }
+    .profile-banner .pb-arrow { display: inline-block; transition: transform 0.3s; }
+    .profile-banner:hover .pb-arrow { transform: translateX(6px); }
   </style>
   <!-- Cloudflare Web Analytics -->
   <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "ebda8eb66fdf497a91f2a69147762a82"}'></script>
@@ -131,14 +140,7 @@
 </div>
 -->
 
-<div class="coming-soon">
-  <div class="cs-line"></div>
-  <p class="cs-label">Arriving Soon</p>
-  <p class="cs-desc">The canvas is being prepared. Original paintings, sketches, and creative works will be unveiled here.</p>
-  <div class="cs-line"></div>
-</div>
-
-<div class="gallery-grid" id="gallery" style="display:none;">
+<div class="gallery-grid" id="gallery">
 </div>
 
 <!-- LIGHTBOX -->
@@ -151,6 +153,12 @@
   </div>
   <div class="lightbox-caption" id="lb-caption"></div>
 </div>
+
+<a class="profile-banner" href="index.html">
+  <div class="pb-eyebrow">The Other Side</div>
+  <h2>Ravish Gupta &mdash; Researcher &amp; Engineer</h2>
+  <div class="pb-hint">AI/ML research, publications, open source <span class="pb-arrow">&rarr;</span></div>
+</a>
 
 <footer>
   &copy; 2026 Ravish Gupta &nbsp;&middot;&nbsp; All artwork is original. For display only &mdash; not for sale or reproduction.
@@ -184,11 +192,8 @@
     });
   }, { threshold: 0.1 });
 
-  // Google Drive thumbnail URL (low-res, watermarked by you)
-  var THUMB_SIZE = 'w800';
-  function driveThumbUrl(fileId) {
-    return 'https://drive.google.com/thumbnail?id=' + fileId + '&sz=' + THUMB_SIZE;
-  }
+  function thumbUrl(file) { return 'gallery/thumbs/' + file + '.jpg'; }
+  function displayUrl(file) { return 'gallery/display/' + file + '.jpg'; }
 
   function esc(str) {
     var div = document.createElement('div');
@@ -209,12 +214,12 @@
       }
 
       gallery.innerHTML = works.map(function(w) {
-        var thumbUrl = driveThumbUrl(w.id);
+        var thumb = thumbUrl(w.file);
         var detail = esc(w.medium || '');
         if (w.size) detail += ', ' + esc(w.size);
         if (w.year) detail += ' \u00B7 ' + w.year;
-        return '<div class="art-card" data-category="' + esc(w.category || 'other') + '">' +
-          '<div class="art-thumb" style="background-image:url(\'' + thumbUrl + '\');"></div>' +
+        return '<div class="art-card" data-category="' + esc(w.category || 'other') + '" data-display="' + displayUrl(w.file) + '">' +
+          '<div class="art-thumb" style="background-image:url(\'' + thumb + '\');"></div>' +
           '<div class="art-overlay"></div>' +
           '<div class="art-info"><h3>' + esc(w.title) + '</h3><p>' + detail + '</p></div>' +
         '</div>';
@@ -224,21 +229,20 @@
       cards = document.querySelectorAll('.art-card');
 
       // Auto-size thumbnails once images load
-      cards.forEach(function(card) {
-        var thumb = card.querySelector('.art-thumb');
+      cards.forEach(function(card, i) {
+        var thumbEl = card.querySelector('.art-thumb');
         var img = new Image();
         img.onload = function() {
           var ratio = img.height / img.width;
-          thumb.style.height = Math.round(thumb.offsetWidth * ratio) + 'px';
+          thumbEl.style.height = Math.round(thumbEl.offsetWidth * ratio) + 'px';
           observer.observe(card);
         };
         img.onerror = function() {
-          // Fallback height if image fails to load
-          thumb.style.height = '300px';
-          thumb.style.background = 'linear-gradient(135deg, #1a1a2e, #0f3460)';
+          thumbEl.style.height = '300px';
+          thumbEl.style.background = 'linear-gradient(135deg, #1a1a2e, #0f3460)';
           observer.observe(card);
         };
-        img.src = driveThumbUrl(works[Array.from(cards).indexOf(card)].id);
+        img.src = thumbUrl(works[i].file);
       });
 
       initFilters();
@@ -292,8 +296,9 @@
     if (index < 0 || index >= visible.length) return;
     currentIndex = index;
     var card = visible[index];
+    var displaySrc = card.getAttribute('data-display');
+    var bg = 'url(\'' + displaySrc + '\')';
     var thumb = card.querySelector('.art-thumb');
-    var bg = thumb.style.backgroundImage;
     var h = thumb.offsetHeight;
     var w = thumb.offsetWidth;
     var ratio = h / w;

@@ -1,10 +1,68 @@
 [
   {
-    "id": "REPLACE_WITH_DRIVE_FILE_ID",
-    "title": "Example Painting",
-    "medium": "Oil on canvas",
-    "size": "24 x 36 in",
-    "year": 2025,
+    "file": "01_mountain-peak-dusk",
+    "title": "Mountain Peak at Dusk",
+    "medium": "Acrylic on canvas",
+    "category": "painting"
+  },
+  {
+    "file": "02_snow-peak",
+    "title": "Snow Peak",
+    "medium": "Acrylic on canvas",
+    "category": "painting"
+  },
+  {
+    "file": "03_mountain-alpenglow",
+    "title": "Sunset at Tenaya Lake, California",
+    "medium": "Acrylic on canvas",
+    "category": "painting"
+  },
+  {
+    "file": "04_alpine-lake",
+    "title": "Tuscohatchie Lake",
+    "medium": "Acrylic on canvas",
+    "category": "painting"
+  },
+  {
+    "file": "05_mountain-stream",
+    "title": "Mountain Stream",
+    "medium": "Acrylic on canvas",
+    "category": "painting"
+  },
+  {
+    "file": "06_sequoia-snow",
+    "title": "Sequoias in Snow",
+    "medium": "Acrylic on canvas",
+    "category": "painting"
+  },
+  {
+    "file": "07_forest-path",
+    "title": "Forest Path",
+    "medium": "Acrylic on canvas",
+    "category": "painting"
+  },
+  {
+    "file": "08_light-through-trees",
+    "title": "Light Through Trees",
+    "medium": "Acrylic on canvas",
+    "category": "painting"
+  },
+  {
+    "file": "09_countryside-barn",
+    "title": "Countryside Barn",
+    "medium": "Acrylic on canvas",
+    "category": "painting"
+  },
+  {
+    "file": "10_rolling-hills-sunset",
+    "title": "Rolling Hills at Sunset",
+    "medium": "Acrylic on canvas",
+    "category": "painting"
+  },
+  {
+    "file": "11_hilltop-silhouettes",
+    "title": "Gasworks Park, Seattle WA",
+    "medium": "Acrylic on canvas",
     "category": "painting"
   }
 ]
